@@ -3,7 +3,9 @@ import { useParams } from 'react-router-dom'
 import { defaultResumeData } from '../data/defaultResume.js'
 import { templates, colorThemes, fontPairings } from '../data/templates.js'
 import { saveResume, loadResume, saveSettings, loadSettings, exportResumeJSON, importResumeJSON } from '../utils/storage.js'
+import { isPro, PAYMENT_CONFIG } from '../utils/monetization.js'
 import ResumePreview from '../components/ResumePreview.jsx'
+import ProModal from '../components/ProModal.jsx'
 import html2canvas from 'html2canvas'
 import { jsPDF } from 'jspdf'
 import './Editor.css'
@@ -43,6 +45,9 @@ export default function Editor() {
   const [showConfetti, setShowConfetti] = useState(false)
   const [saved, setSaved] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [showProModal, setShowProModal] = useState(false)
+  const [proFeature, setProFeature] = useState('')
+  const userIsPro = isPro()
 
   // Auto-save
   useEffect(() => {
@@ -58,9 +63,16 @@ export default function Editor() {
   // Set template from URL
   useEffect(() => {
     if (templateId && templates.find(t => t.id === templateId)) {
+      const tmpl = templates.find(t => t.id === templateId)
+      // If premium template and not pro, show modal
+      if (!tmpl.free && !userIsPro && PAYMENT_CONFIG.lockPremiumTemplates) {
+        setProFeature('premium templates')
+        setShowProModal(true)
+        return
+      }
       setSettings(prev => ({ ...prev, template: templateId }))
     }
-  }, [templateId])
+  }, [templateId, userIsPro])
 
   const updatePersonal = useCallback((field, value) => {
     setResume(prev => ({
@@ -204,6 +216,17 @@ export default function Editor() {
     }))
   }
 
+  // Handle selecting a template (with pro check)
+  const handleSelectTemplate = (tmplId) => {
+    const tmpl = templates.find(t => t.id === tmplId)
+    if (tmpl && !tmpl.free && !userIsPro && PAYMENT_CONFIG.lockPremiumTemplates) {
+      setProFeature('premium templates')
+      setShowProModal(true)
+      return
+    }
+    setSettings(prev => ({ ...prev, template: tmplId }))
+  }
+
   // PDF Export
   const handleExport = async () => {
     if (!previewRef.current) return
@@ -226,6 +249,14 @@ export default function Editor() {
       const pageHeight = pdf.internal.pageSize.getHeight()
 
       pdf.addImage(imgData, 'PNG', 0, 0, pageWidth, pageHeight)
+
+      // Add watermark for free users
+      if (!userIsPro && PAYMENT_CONFIG.watermarkOnFree) {
+        pdf.setFontSize(9)
+        pdf.setTextColor(180, 180, 180)
+        pdf.text('Made with SnapCV — snapcv-tawny.vercel.app', pageWidth / 2, pageHeight - 5, { align: 'center' })
+      }
+
       pdf.save(`${resume.personal.firstName || 'resume'}_${resume.personal.lastName || 'snapcv'}.pdf`)
 
       setShowConfetti(true)
@@ -342,14 +373,14 @@ export default function Editor() {
                 {templates.map(t => (
                   <button
                     key={t.id}
-                    className={`customize-template-btn ${settings.template === t.id ? 'active' : ''}`}
-                    onClick={() => setSettings(prev => ({ ...prev, template: t.id }))}
+                    className={`customize-template-btn ${settings.template === t.id ? 'active' : ''} ${!t.free && !userIsPro ? 'locked' : ''}`}
+                    onClick={() => handleSelectTemplate(t.id)}
                     title={t.name}
                   >
                     <div className="mini-tmpl" style={{ background: t.colors.bg }}>
                       <div style={{ background: t.colors.primary, height: '30%', borderRadius: '2px 2px 0 0' }}></div>
                     </div>
-                    <span>{t.name}</span>
+                    <span>{t.name}{!t.free && !userIsPro ? ' 🔒' : ''}</span>
                   </button>
                 ))}
               </div>
@@ -649,6 +680,22 @@ export default function Editor() {
           </div>
         </div>
       </main>
+
+      {/* Pro Upgrade Modal */}
+      <ProModal
+        isOpen={showProModal}
+        onClose={() => setShowProModal(false)}
+        feature={proFeature}
+      />
+
+      {/* Upgrade banner for free users */}
+      {!userIsPro && (
+        <div className="upgrade-banner" onClick={() => { setProFeature('all premium features'); setShowProModal(true) }}>
+          <span>👑</span>
+          <span><strong>Upgrade to Pro</strong> — Remove watermark & unlock all templates</span>
+          <span className="upgrade-banner__arrow">→</span>
+        </div>
+      )}
     </div>
   )
 }

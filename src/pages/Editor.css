@@ -616,3 +616,57 @@
     min-height: auto;
   }
 }
+
+/* --- Upgrade Banner --- */
+.upgrade-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-sticky);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-6);
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.95), rgba(99, 102, 241, 0.95));
+  backdrop-filter: blur(8px);
+  color: var(--white);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.upgrade-banner:hover {
+  background: linear-gradient(135deg, rgba(124, 58, 237, 1), rgba(99, 102, 241, 1));
+  padding: var(--space-4) var(--space-6);
+}
+
+.upgrade-banner__arrow {
+  font-size: var(--text-lg);
+  transition: transform var(--transition-base);
+}
+
+.upgrade-banner:hover .upgrade-banner__arrow {
+  transform: translateX(4px);
+}
+
+/* --- Locked Template --- */
+.customize-template-btn.locked {
+  opacity: 0.6;
+  position: relative;
+}
+
+.customize-template-btn.locked:hover {
+  border-color: rgba(245, 158, 11, 0.5);
+  background: rgba(245, 158, 11, 0.05);
+}
+
+@media (max-width: 768px) {
+  .upgrade-banner {
+    font-size: var(--text-xs);
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-4);
+  }
+}

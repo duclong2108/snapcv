@@ -47,11 +47,11 @@ export default function Header() {
           
           {user ? (
             <div className="header__user-menu">
-              <img src={user.photoURL || `https://ui-avatars.com/api/?name=${user.email}`} alt="Avatar" className="header__avatar" />
-              <button onClick={logout} className="header__link" style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>Logout</button>
+              <img src={user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || user.email)}&background=7C3AED&color=fff&size=32`} alt="Avatar" className="header__avatar" />
+              <button onClick={logout} className="header__logout-btn">Logout</button>
             </div>
           ) : (
-            <button onClick={openLoginModal} className="header__link" style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>Sign In</button>
+            <button onClick={openLoginModal} className="header__signin-btn">Sign In</button>
           )}
 
           <Link to="/editor" className="btn btn-primary btn-sm header__cta">

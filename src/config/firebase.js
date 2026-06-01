@@ -2,15 +2,13 @@ import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider, FacebookAuthProvider } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
-// TODO: Replace these with your actual Firebase project configuration
-// You can find these in the Firebase Console: Project Settings -> General -> Your apps
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "YOUR_API_KEY",
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "your-app.firebaseapp.com",
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "your-app-id",
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "your-app.appspot.com",
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "123456789",
-  appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:123456789:web:abcdef123456"
+  apiKey: "AIzaSyAHNFwTJ5u8bEnYIpoHHzJDvTL784cCR1Q",
+  authDomain: "snapcv-app.firebaseapp.com",
+  projectId: "snapcv-app",
+  storageBucket: "snapcv-app.firebasestorage.app",
+  messagingSenderId: "1036667552302",
+  appId: "1:1036667552302:web:2cdb5f31597f45028615bf"
 };
 
 const app = initializeApp(firebaseConfig);

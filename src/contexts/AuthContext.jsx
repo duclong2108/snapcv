@@ -14,105 +14,55 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-
-  const isMockMode = auth.app.options.apiKey === "YOUR_API_KEY" || !auth.app.options.apiKey;
-
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   const openLoginModal = () => setIsLoginModalOpen(true);
   const closeLoginModal = () => setIsLoginModalOpen(false);
 
-  const mockLogin = (providerName) => {
-    return new Promise((resolve, reject) => {
-      const width = 500;
-      const height = 600;
-      const left = window.screen.width / 2 - width / 2;
-      const top = window.screen.height / 2 - height / 2;
-      
-      const popupUrl = `${window.location.origin}${window.location.pathname}#/mock-auth?provider=${providerName.toLowerCase()}`;
-      
-      const popup = window.open(
-        popupUrl,
-        'MockAuthPopup',
-        `width=${width},height=${height},top=${top},left=${left}`
-      );
-
-      const messageListener = (event) => {
-        if (event.origin !== window.location.origin) return;
-        
-        if (event.data && event.data.type === 'MOCK_AUTH_SUCCESS') {
-          const mockUser = event.data.user;
-          setUser(mockUser);
-          localStorage.setItem('snapcv_mock_user', JSON.stringify(mockUser));
-          
-          window.removeEventListener('message', messageListener);
-          resolve({ user: mockUser });
-        }
-      };
-
-      window.addEventListener('message', messageListener);
-
-      // Clean up listener if window closed without messaging
-      const checkClosed = setInterval(() => {
-        if (!popup || popup.closed) {
-          clearInterval(checkClosed);
-          window.removeEventListener('message', messageListener);
-          // Don't reject, just let them close it
-        }
-      }, 1000);
-    });
-  };
-
   const loginWithGoogle = async () => {
     try {
-      if (isMockMode) return await mockLogin('Google');
-      return await signInWithPopup(auth, googleProvider);
+      const result = await signInWithPopup(auth, googleProvider);
+      closeLoginModal();
+      return result;
     } catch (error) {
-      console.error("Error signing in with Google:", error);
+      // User closed popup or other error
+      if (error.code !== 'auth/popup-closed-by-user') {
+        console.error("Google sign-in error:", error);
+      }
       throw error;
     }
   };
 
   const loginWithFacebook = async () => {
     try {
-      if (isMockMode) return await mockLogin('Facebook');
-      return await signInWithPopup(auth, facebookProvider);
+      const result = await signInWithPopup(auth, facebookProvider);
+      closeLoginModal();
+      return result;
     } catch (error) {
-      console.error("Error signing in with Facebook:", error);
+      if (error.code !== 'auth/popup-closed-by-user') {
+        console.error("Facebook sign-in error:", error);
+      }
       throw error;
     }
   };
 
   const logout = async () => {
     try {
-      if (isMockMode) {
-        setUser(null);
-        localStorage.removeItem('snapcv_mock_user');
-        return;
-      }
       await signOut(auth);
     } catch (error) {
-      console.error("Error signing out:", error);
+      console.error("Sign out error:", error);
       throw error;
     }
   };
 
   useEffect(() => {
-    // If not configured, check mock user
-    if (isMockMode) {
-      const mockUser = localStorage.getItem('snapcv_mock_user');
-      if (mockUser) setUser(JSON.parse(mockUser));
-      setLoading(false);
-      return;
-    }
-
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
       setLoading(false);
     });
 
     return () => unsubscribe();
-  }, [isMockMode]);
+  }, []);
 
   const value = {
     user,

@@ -22,7 +22,9 @@ const sectionsList = [
 export default function Editor() {
   const { templateId } = useParams()
   const previewRef = useRef(null)
+  const previewContainerRef = useRef(null)
   const fileInputRef = useRef(null)
+  const [previewScale, setPreviewScale] = useState(1)
 
   const [resume, setResume] = useState(() => {
     const saved = loadResume()
@@ -59,6 +61,26 @@ export default function Editor() {
     }, 1000)
     return () => clearTimeout(timer)
   }, [resume, settings])
+
+  // Dynamic preview scaling
+  useEffect(() => {
+    const container = previewContainerRef.current
+    if (!container) return
+
+    const updateScale = () => {
+      const containerWidth = container.clientWidth - 48 // padding
+      const containerHeight = container.clientHeight - 48
+      const scaleX = containerWidth / 794
+      const scaleY = containerHeight / 1123
+      const scale = Math.min(scaleX, scaleY, 1)
+      setPreviewScale(Math.max(scale, 0.3))
+    }
+
+    updateScale()
+    const observer = new ResizeObserver(updateScale)
+    observer.observe(container)
+    return () => observer.disconnect()
+  }, [])
 
   // Set template from URL
   useEffect(() => {
@@ -668,8 +690,8 @@ export default function Editor() {
 
       {/* Right Panel - Preview */}
       <main className="editor__preview">
-        <div className="editor__preview-scroll">
-          <div className="editor__preview-page">
+        <div className="editor__preview-scroll" ref={previewContainerRef}>
+          <div className="editor__preview-page" style={{ transform: `scale(${previewScale})` }}>
             <ResumePreview
               ref={previewRef}
               data={resume}
@@ -679,6 +701,7 @@ export default function Editor() {
             />
           </div>
         </div>
+        <div className="preview-zoom-badge">{Math.round(previewScale * 100)}%</div>
       </main>
 
       {/* Pro Upgrade Modal */}

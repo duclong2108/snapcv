@@ -538,9 +538,10 @@
   flex: 1;
   background: var(--navy-800);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   overflow: hidden;
+  position: relative;
 }
 
 .editor__preview-scroll {
@@ -549,16 +550,32 @@
   overflow-y: auto;
   display: flex;
   justify-content: center;
-  padding: var(--space-8);
+  align-items: flex-start;
+  padding: var(--space-6);
 }
 
 .editor__preview-page {
   width: 794px;
   min-height: 1123px;
   flex-shrink: 0;
-  box-shadow: var(--shadow-2xl);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255,255,255,0.05);
   border-radius: var(--radius-md);
   overflow: hidden;
+  transform-origin: top center;
+}
+
+.preview-zoom-badge {
+  position: absolute;
+  bottom: 60px;
+  right: 16px;
+  padding: 4px 10px;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--navy-400);
+  pointer-events: none;
 }
 
 /* --- Confetti --- */

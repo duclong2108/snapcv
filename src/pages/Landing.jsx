@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import Footer from '../components/Footer.jsx'
 import { templates } from '../data/templates.js'
 import { PAYMENT_CONFIG } from '../utils/monetization.js'
+import TemplateThumbnail from '../components/TemplateThumbnail.jsx'
 import './Landing.css'
 
 const features = [
@@ -221,29 +222,11 @@ export default function Landing() {
           </div>
 
           <div className="template-preview__grid animate-on-scroll">
-            {templates.slice(0, 3).map((tmpl) => (
+            {templates.slice(0, 6).map((tmpl) => (
               <Link to={`/editor/${tmpl.id}`} key={tmpl.id} className="template-preview-card">
-                <div className="template-preview-card__mockup" style={{
-                  '--tmpl-primary': tmpl.colors.primary,
-                  '--tmpl-accent': tmpl.colors.accent,
-                  '--tmpl-bg': tmpl.colors.bg
-                }}>
-                  <div className="mini-resume" style={{ background: tmpl.colors.bg }}>
-                    <div className="mini-resume__header" style={{ background: tmpl.colors.primary }}>
-                      <div className="mini-dot" style={{ background: 'rgba(255,255,255,0.8)' }}></div>
-                      <div className="mini-line mini-line--w60" style={{ background: 'rgba(255,255,255,0.6)' }}></div>
-                      <div className="mini-line mini-line--w40" style={{ background: 'rgba(255,255,255,0.4)' }}></div>
-                    </div>
-                    <div className="mini-resume__body">
-                      <div className="mini-line mini-line--w30" style={{ background: tmpl.colors.primary }}></div>
-                      <div className="mini-line mini-line--w90" style={{ background: '#e2e8f0' }}></div>
-                      <div className="mini-line mini-line--w80" style={{ background: '#e2e8f0' }}></div>
-                      <div className="mini-line mini-line--w70" style={{ background: '#e2e8f0' }}></div>
-                      <div className="mini-spacer"></div>
-                      <div className="mini-line mini-line--w30" style={{ background: tmpl.colors.primary }}></div>
-                      <div className="mini-line mini-line--w90" style={{ background: '#e2e8f0' }}></div>
-                      <div className="mini-line mini-line--w85" style={{ background: '#e2e8f0' }}></div>
-                    </div>
+                <div className="template-preview-card__mockup">
+                  <div className="landing-tmpl-container">
+                    <TemplateThumbnail templateId={tmpl.id} colors={tmpl.colors} />
                   </div>
                 </div>
                 <div className="template-preview-card__info">

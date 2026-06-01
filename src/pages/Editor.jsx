@@ -5,6 +5,7 @@ import { templates, colorThemes, fontPairings } from '../data/templates.js'
 import { saveResume, loadResume, saveSettings, loadSettings, exportResumeJSON, importResumeJSON } from '../utils/storage.js'
 import { isPro, PAYMENT_CONFIG } from '../utils/monetization.js'
 import ResumePreview from '../components/ResumePreview.jsx'
+import TemplateThumbnail from '../components/TemplateThumbnail.jsx'
 import ProModal from '../components/ProModal.jsx'
 import html2canvas from 'html2canvas'
 import { jsPDF } from 'jspdf'
@@ -399,8 +400,8 @@ export default function Editor() {
                     onClick={() => handleSelectTemplate(t.id)}
                     title={t.name}
                   >
-                    <div className="mini-tmpl" style={{ background: t.colors.bg }}>
-                      <div style={{ background: t.colors.primary, height: '30%', borderRadius: '2px 2px 0 0' }}></div>
+                    <div className="mini-tmpl-container">
+                      <TemplateThumbnail templateId={t.id} colors={t.colors} />
                     </div>
                     <span>{t.name}{!t.free && !userIsPro ? ' 🔒' : ''}</span>
                   </button>

@@ -391,55 +391,19 @@
   justify-content: center;
 }
 
-.mini-resume {
-  width: 180px;
-  border-radius: 8px;
+.landing-tmpl-container {
+  width: 140px;
+  height: 200px;
+  border-radius: 4px;
   overflow: hidden;
   box-shadow: var(--shadow-lg);
   transition: transform var(--transition-base);
+  position: relative;
+  z-index: 1;
 }
 
-.template-preview-card:hover .mini-resume {
+.template-preview-card:hover .landing-tmpl-container {
   transform: scale(1.05);
-}
-
-.mini-resume__header {
-  padding: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  align-items: flex-start;
-}
-
-.mini-dot {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  margin-bottom: 4px;
-}
-
-.mini-line {
-  height: 4px;
-  border-radius: 2px;
-}
-
-.mini-line--w90 { width: 90%; }
-.mini-line--w85 { width: 85%; }
-.mini-line--w80 { width: 80%; }
-.mini-line--w70 { width: 70%; }
-.mini-line--w60 { width: 60%; }
-.mini-line--w40 { width: 40%; }
-.mini-line--w30 { width: 30%; }
-
-.mini-resume__body {
-  padding: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.mini-spacer {
-  height: 6px;
 }
 
 .template-preview-card__info {

@@ -172,12 +172,20 @@
   background: rgba(124, 58, 237, 0.1);
 }
 
-.mini-tmpl {
+.mini-tmpl-container {
   width: 36px;
   height: 48px;
   border-radius: 3px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
   overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: transform var(--transition-fast);
+}
+
+.customize-template-btn:hover .mini-tmpl-container,
+.customize-template-btn.active .mini-tmpl-container {
+  transform: scale(1.05);
+  border-color: var(--violet-400);
 }
 
 .customize-colors {

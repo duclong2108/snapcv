@@ -44,6 +44,9 @@ export default function Header() {
           <Link to="/" className={`header__link ${location.pathname === '/' ? 'header__link--active' : ''}`}>Home</Link>
           <Link to="/templates" className={`header__link ${location.pathname === '/templates' ? 'header__link--active' : ''}`}>Templates</Link>
           <a href="#pricing" className="header__link" onClick={() => setMobileOpen(false)}>Pricing</a>
+          {user && (
+            <Link to="/dashboard" className={`header__link ${location.pathname === '/dashboard' ? 'header__link--active' : ''}`}>Dashboard</Link>
+          )}
           
           {user ? (
             <div className="header__user-menu">

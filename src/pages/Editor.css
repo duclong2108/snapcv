@@ -71,6 +71,9 @@
   padding: var(--space-3) var(--space-4);
   border-bottom: 1px solid var(--glass-border);
   background: rgba(15, 23, 42, 0.5);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .editor__toolbar-actions {
@@ -98,6 +101,25 @@
   color: var(--white);
   background: rgba(255, 255, 255, 0.1);
   border-color: rgba(255, 255, 255, 0.2);
+}
+
+.resume-title-input {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--white);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  width: 150px;
+  transition: all var(--transition-fast);
+}
+
+.resume-title-input:hover,
+.resume-title-input:focus {
+  border-color: var(--navy-600);
+  background: var(--navy-800);
+  outline: none;
 }
 
 .toolbar-btn:disabled {

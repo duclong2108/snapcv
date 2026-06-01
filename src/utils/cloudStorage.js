@@ -1,11 +1,45 @@
-import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { collection, doc, setDoc, getDoc, getDocs, deleteDoc, query, orderBy } from 'firebase/firestore';
 import { db } from '../config/firebase';
 
-// Save resume data to Firestore (debounced in Editor)
-export const saveResumeToCloud = async (userId, resumeData) => {
+// Get all resumes for a user
+export const getUserResumes = async (userId) => {
   try {
-    await setDoc(doc(db, 'resumes', userId), {
-      resume: resumeData,
+    const resumesRef = collection(db, 'users', userId, 'resumes');
+    const q = query(resumesRef, orderBy('updatedAt', 'desc'));
+    const snapshot = await getDocs(q);
+    
+    return snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+  } catch (error) {
+    console.error('Error fetching resumes:', error);
+    return [];
+  }
+};
+
+// Get a specific resume
+export const getResume = async (userId, resumeId) => {
+  try {
+    const docRef = doc(db, 'users', userId, 'resumes', resumeId);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      return { id: docSnap.id, ...docSnap.data() };
+    }
+    return null;
+  } catch (error) {
+    console.error('Error getting resume:', error);
+    return null;
+  }
+};
+
+// Save resume data to Firestore
+export const saveResumeToCloud = async (userId, resumeId, data, title = 'Untitled Resume') => {
+  try {
+    const docRef = doc(db, 'users', userId, 'resumes', resumeId);
+    await setDoc(docRef, {
+      ...data,
+      title,
       updatedAt: new Date().toISOString()
     }, { merge: true });
     return true;
@@ -15,46 +49,30 @@ export const saveResumeToCloud = async (userId, resumeData) => {
   }
 };
 
-// Load resume data from Firestore
-export const loadResumeFromCloud = async (userId) => {
+// Delete a resume
+export const deleteResume = async (userId, resumeId) => {
   try {
-    const docRef = doc(db, 'resumes', userId);
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      return docSnap.data().resume;
-    }
-    return null;
-  } catch (error) {
-    console.error('Error loading from cloud:', error);
-    return null;
-  }
-};
-
-// Save settings to Firestore
-export const saveSettingsToCloud = async (userId, settings) => {
-  try {
-    await setDoc(doc(db, 'resumes', userId), {
-      settings: settings,
-      updatedAt: new Date().toISOString()
-    }, { merge: true });
+    await deleteDoc(doc(db, 'users', userId, 'resumes', resumeId));
     return true;
   } catch (error) {
-    console.error('Error saving settings to cloud:', error);
+    console.error('Error deleting resume:', error);
     return false;
   }
 };
 
-// Load settings from Firestore
-export const loadSettingsFromCloud = async (userId) => {
-  try {
-    const docRef = doc(db, 'resumes', userId);
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists() && docSnap.data().settings) {
-      return docSnap.data().settings;
-    }
-    return null;
-  } catch (error) {
-    console.error('Error loading settings from cloud:', error);
-    return null;
+// Backward compatibility (if needed)
+export const loadResumeFromCloud = async (userId) => {
+  const resumes = await getUserResumes(userId);
+  if (resumes.length > 0) {
+     return resumes[0].resume; // return the most recent one
   }
+  return null;
+};
+
+export const loadSettingsFromCloud = async (userId) => {
+  const resumes = await getUserResumes(userId);
+  if (resumes.length > 0) {
+     return resumes[0].settings; // return the most recent one
+  }
+  return null;
 };

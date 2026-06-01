@@ -4,12 +4,13 @@ import { Helmet } from 'react-helmet-async'
 import { defaultResumeData } from '../data/defaultResume.js'
 import { templates, colorThemes, fontPairings } from '../data/templates.js'
 import { saveResume, loadResume, saveSettings, loadSettings, exportResumeJSON, importResumeJSON } from '../utils/storage.js'
-import { saveResumeToCloud, loadResumeFromCloud, saveSettingsToCloud, loadSettingsFromCloud } from '../utils/cloudStorage.js'
+import { saveResumeToCloud, loadResumeFromCloud, saveSettingsToCloud, loadSettingsFromCloud, getResume } from '../utils/cloudStorage.js'
 import { isPro, PAYMENT_CONFIG } from '../utils/monetization.js'
 import ResumePreview from '../components/ResumePreview.jsx'
 import TemplateThumbnail from '../components/TemplateThumbnail.jsx'
-import SmartSuggestions from '../components/SmartSuggestions.jsx'
+import AIWriter from '../components/AIWriter.jsx'
 import ProModal from '../components/ProModal.jsx'
+import ATSChecker from '../components/ATSChecker.jsx'
 import { useAuth } from '../contexts/AuthContext.jsx'
 import html2canvas from 'html2canvas'
 import { jsPDF } from 'jspdf'
@@ -25,7 +26,11 @@ const sectionsList = [
 ]
 
 export default function Editor() {
-  const { templateId } = useParams()
+  const { resumeId } = useParams()
+  // Determine if URL param is a template ID or a resume ID
+  const isTemplateRoute = templates.some(t => t.id === resumeId)
+  const currentTemplateId = isTemplateRoute ? resumeId : null
+  const currentResumeId = isTemplateRoute || !resumeId ? 'default' : resumeId
   const previewRef = useRef(null)
   const previewContainerRef = useRef(null)
   const fileInputRef = useRef(null)
@@ -33,6 +38,7 @@ export default function Editor() {
 
   const { user, openLoginModal } = useAuth()
   const [cloudLoaded, setCloudLoaded] = useState(false)
+  const [resumeTitle, setResumeTitle] = useState('Untitled Resume')
 
   const [resume, setResume] = useState(() => {
     const saved = loadResume()
@@ -44,12 +50,23 @@ export default function Editor() {
   const [settings, setSettings] = useState(() => {
     const saved = loadSettings()
     return saved || {
-      template: templateId || 'minimal',
+      template: currentTemplateId || 'minimal',
       colorTheme: 'navy',
       fontPairing: 'inter',
       layout: 'single'
     }
   })
+
+  // Set initial state if coming from duplicate
+  useEffect(() => {
+    const dupSource = localStorage.getItem('duplicate_source');
+    if (dupSource && !isTemplateRoute && resumeId) {
+      const source = JSON.parse(dupSource);
+      setResume(source.resume || source);
+      setResumeTitle((source.title || 'Untitled Resume') + ' (Copy)');
+      localStorage.removeItem('duplicate_source');
+    }
+  }, [resumeId, isTemplateRoute]);
 
   const [activeSection, setActiveSection] = useState('personal')
   const [showCustomize, setShowCustomize] = useState(false)
@@ -70,32 +87,46 @@ export default function Editor() {
       setTimeout(() => setSaved(false), 2000)
 
       // Cloud sync when logged in
-      if (user) {
-        saveResumeToCloud(user.uid, resume)
-        saveSettingsToCloud(user.uid, settings)
+      if (user && cloudLoaded) {
+        saveResumeToCloud(user.uid, currentResumeId, { resume, settings }, resumeTitle)
       }
     }, 1500)
     return () => clearTimeout(timer)
-  }, [resume, settings, user])
+  }, [resume, settings, user, currentResumeId, resumeTitle, cloudLoaded])
 
-  // Load from cloud when user logs in
+  // Load from cloud when user logs in or resumeId changes
   useEffect(() => {
     if (user && !cloudLoaded) {
       const loadCloud = async () => {
-        const cloudResume = await loadResumeFromCloud(user.uid)
-        const cloudSettings = await loadSettingsFromCloud(user.uid)
-        if (cloudResume) {
-          if (!cloudResume.customSections) cloudResume.customSections = []
-          setResume(cloudResume)
+        let cloudData = null;
+        if (currentResumeId !== 'default') {
+           cloudData = await getResume(user.uid, currentResumeId);
+        } else {
+           // Fallback to old load pattern for default
+           const oldRes = await loadResumeFromCloud(user.uid);
+           const oldSet = await loadSettingsFromCloud(user.uid);
+           if (oldRes || oldSet) {
+               cloudData = { resume: oldRes, settings: oldSet, title: 'My Resume' };
+           }
         }
-        if (cloudSettings) {
-          setSettings(cloudSettings)
+        
+        if (cloudData) {
+          if (cloudData.resume) {
+             if (!cloudData.resume.customSections) cloudData.resume.customSections = []
+             setResume(cloudData.resume)
+          }
+          if (cloudData.settings) {
+            setSettings(cloudData.settings)
+          }
+          if (cloudData.title) {
+            setResumeTitle(cloudData.title)
+          }
         }
         setCloudLoaded(true)
       }
       loadCloud()
     }
-  }, [user, cloudLoaded])
+  }, [user, cloudLoaded, currentResumeId])
 
   // Dynamic preview scaling
   useEffect(() => {
@@ -119,17 +150,17 @@ export default function Editor() {
 
   // Set template from URL
   useEffect(() => {
-    if (templateId && templates.find(t => t.id === templateId)) {
-      const tmpl = templates.find(t => t.id === templateId)
+    if (currentTemplateId && templates.find(t => t.id === currentTemplateId)) {
+      const tmpl = templates.find(t => t.id === currentTemplateId)
       // If premium template and not pro, show modal
       if (!tmpl.free && !userIsPro && PAYMENT_CONFIG.lockPremiumTemplates) {
         setProFeature('premium templates')
         setShowProModal(true)
         return
       }
-      setSettings(prev => ({ ...prev, template: templateId }))
+      setSettings(prev => ({ ...prev, template: currentTemplateId }))
     }
-  }, [templateId, userIsPro])
+  }, [currentTemplateId, userIsPro])
 
   const updatePersonal = useCallback((field, value) => {
     setResume(prev => ({
@@ -512,6 +543,12 @@ export default function Editor() {
       <aside className={`editor__sidebar ${sidebarOpen ? 'editor__sidebar--open' : ''}`}>
         {/* Toolbar */}
         <div className="editor__toolbar">
+          <input 
+             className="resume-title-input" 
+             value={resumeTitle} 
+             onChange={(e) => setResumeTitle(e.target.value)}
+             placeholder="Untitled Resume"
+          />
           <div className="editor__toolbar-actions">
             <button className="toolbar-btn" onClick={() => setShowCustomize(!showCustomize)} title="Customize">
               <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
@@ -530,26 +567,8 @@ export default function Editor() {
               )}
               {exporting ? 'Exporting...' : 'PDF'}
             </button>
-            <button className="toolbar-btn" onClick={() => exportResumeJSON(resume)} title="Export JSON">
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                <path d="M6 12l-3-3 3-3M12 6l3 3-3 3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-              JSON
-            </button>
-            <button className="toolbar-btn" onClick={() => fileInputRef.current?.click()} title="Import JSON">
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                <path d="M3 6v-2.25A1.5 1.5 0 014.5 2.25h9A1.5 1.5 0 0115 3.75V6M5.25 10.5L9 6.75l3.75 3.75M9 15.75v-9" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-              Import
-            </button>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept=".json"
-              style={{ display: 'none' }}
-              onChange={handleImport}
-            />
           </div>
+          <ATSChecker resume={resume} />
         </div>
 
         {!user && (
@@ -674,6 +693,34 @@ export default function Editor() {
           {activeSection === 'personal' && (
             <div className="form-section">
               <h3 className="form-section__title">Personal Information</h3>
+              <div className="form-field">
+                <label>Profile Photo</label>
+                <div className="photo-upload-wrapper" style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                  {resume.personal.photo ? (
+                    <img src={resume.personal.photo} alt="Profile" style={{ width: '48px', height: '48px', borderRadius: '50%', objectFit: 'cover' }} />
+                  ) : (
+                    <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'var(--navy-700)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px' }}>👤</div>
+                  )}
+                  <input 
+                    type="file" 
+                    accept="image/*" 
+                    onChange={(e) => {
+                      const file = e.target.files[0];
+                      if (file) {
+                        const reader = new FileReader();
+                        reader.onloadend = () => {
+                          updatePersonal('photo', reader.result);
+                        };
+                        reader.readAsDataURL(file);
+                      }
+                    }}
+                    style={{ fontSize: '12px' }}
+                  />
+                  {resume.personal.photo && (
+                    <button className="btn btn-sm" onClick={() => updatePersonal('photo', '')}>Remove</button>
+                  )}
+                </div>
+              </div>
               <div className="form-grid">
                 <div className="form-field">
                   <label>First Name</label>
@@ -774,10 +821,9 @@ export default function Editor() {
                   </div>
                   <div className="form-field">
                     <label>Bullet Points</label>
-                    <SmartSuggestions 
+                    <AIWriter 
                       jobTitle={exp.position} 
-                      userIsPro={userIsPro} 
-                      onSelect={(text) => {
+                      onInsert={(text) => {
                         // Add the text as a new bullet point
                         setResume(prev => ({
                           ...prev,
@@ -785,10 +831,6 @@ export default function Editor() {
                             e.id === exp.id ? { ...e, bullets: [...e.bullets, text] } : e
                           )
                         }))
-                      }}
-                      onProClick={() => {
-                        setProFeature('AI Smart Suggestions')
-                        setShowProModal(true)
                       }}
                     />
                     {exp.bullets.map((bullet, bIdx) => (

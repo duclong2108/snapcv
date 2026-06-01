@@ -124,7 +124,11 @@ const ResumePreview = forwardRef(({ data, settings, theme, font }, ref) => {
         <div className="resume-modern">
           <header className="rmod-header">
             <div className="rmod-header-content">
-              <div className="rmod-initials">{(personal.firstName?.[0] || '')}{(personal.lastName?.[0] || '')}</div>
+              {personal.photo ? (
+                <img src={personal.photo} alt="Profile" className="rmod-photo" style={{ width: '64px', height: '64px', borderRadius: '50%', objectFit: 'cover' }} />
+              ) : (
+                <div className="rmod-initials">{(personal.firstName?.[0] || '')}{(personal.lastName?.[0] || '')}</div>
+              )}
               <div>
                 <h1 className="rmod-name">{personal.firstName} {personal.lastName}</h1>
                 <p className="rmod-title">{personal.title}</p>

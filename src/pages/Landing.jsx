@@ -9,9 +9,19 @@ import './Landing.css'
 
 const features = [
   {
-    icon: '⚡',
-    title: 'Lightning Fast',
-    desc: 'Build your resume in minutes, not hours. Real-time preview as you type.'
+    icon: '🧠',
+    title: 'ATS Score Checker',
+    desc: 'Get instant feedback on your resume format, keywords, and completeness to beat the bots.'
+  },
+  {
+    icon: '🤖',
+    title: 'AI Bullet Points',
+    desc: 'Stuck writing? Instantly generate ATS-optimized, STAR-method bullet points for any job title.'
+  },
+  {
+    icon: '📁',
+    title: 'Multiple Resumes',
+    desc: 'Tailor your application. Build and manage multiple distinct resumes from a single dashboard.'
   },
   {
     icon: '🎨',
@@ -19,24 +29,14 @@ const features = [
     desc: 'Premium, modern designs that make recruiters stop scrolling.'
   },
   {
-    icon: '📄',
-    title: 'PDF Export',
-    desc: 'Download print-ready, ATS-compatible PDFs with one click.'
+    icon: '☁️',
+    title: 'Cloud Auto-Save',
+    desc: 'Never lose your work. Your resumes sync to your Google account automatically.'
   },
   {
-    icon: '🎯',
-    title: 'ATS-Friendly',
-    desc: 'Templates designed to pass Applicant Tracking Systems with flying colors.'
-  },
-  {
-    icon: '🔒',
-    title: 'Privacy First',
-    desc: 'Your data stays in your browser. No account required, no tracking.'
-  },
-  {
-    icon: '💰',
-    title: 'Free Forever',
-    desc: 'Core features are free. Premium templates for those who want more.'
+    icon: '📷',
+    title: 'Photo Upload',
+    desc: 'Applying internationally? Easily add a professional headshot to supported templates.'
   }
 ]
 
@@ -276,6 +276,82 @@ export default function Landing() {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Comparison Section */}
+      <section className="comparison section bg-navy-900" id="compare">
+        <div className="container">
+          <div className="section-header animate-on-scroll">
+            <span className="section-tag">Comparison</span>
+            <h2 className="section-title">Why choose <span className="gradient-text">SnapCV?</span></h2>
+            <p className="section-subtitle">See how we stack up against the competition. No hidden fees, no paywalls for basic downloads.</p>
+          </div>
+
+          <div className="comparison-table-wrapper animate-on-scroll">
+            <table className="comparison-table">
+              <thead>
+                <tr>
+                  <th>Feature</th>
+                  <th>Resume.io</th>
+                  <th>Canva</th>
+                  <th>Novoresume</th>
+                  <th className="highlight-col">SnapCV</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Real Google Login</td>
+                  <td>✅</td>
+                  <td>✅</td>
+                  <td>✅</td>
+                  <td className="highlight-col">✅</td>
+                </tr>
+                <tr>
+                  <td>Cloud Auto-save</td>
+                  <td>✅</td>
+                  <td>✅</td>
+                  <td>✅</td>
+                  <td className="highlight-col">✅</td>
+                </tr>
+                <tr>
+                  <td>ATS Score Checker</td>
+                  <td>✅</td>
+                  <td>❌</td>
+                  <td>✅</td>
+                  <td className="highlight-col">✅ Free</td>
+                </tr>
+                <tr>
+                  <td>AI Bullet Points</td>
+                  <td>✅ Paid</td>
+                  <td>❌</td>
+                  <td>✅ Paid</td>
+                  <td className="highlight-col">✅ Free</td>
+                </tr>
+                <tr>
+                  <td>Multiple Resumes</td>
+                  <td>✅ Paid</td>
+                  <td>✅</td>
+                  <td>✅ Paid</td>
+                  <td className="highlight-col">✅ Free</td>
+                </tr>
+                <tr>
+                  <td>Photo Upload</td>
+                  <td>✅</td>
+                  <td>✅</td>
+                  <td>✅</td>
+                  <td className="highlight-col">✅ Free</td>
+                </tr>
+                <tr>
+                  <td>Free PDF Download</td>
+                  <td>❌ (TXT only)</td>
+                  <td>✅ (Not ATS friendly)</td>
+                  <td>✅ (1 page max)</td>
+                  <td className="highlight-col">✅ Unlimited</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </section>

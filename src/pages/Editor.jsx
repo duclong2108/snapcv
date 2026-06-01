@@ -281,8 +281,21 @@ export default function Editor() {
         pdf.text('Made with SnapCV — snapcv-tawny.vercel.app', pageWidth / 2, pageHeight - 5, { align: 'center' })
       }
 
-      pdf.save(`${resume.personal.firstName || 'resume'}_${resume.personal.lastName || 'snapcv'}.pdf`)
+      const firstName = resume.personal?.firstName?.trim() || 'My'
+      const lastName = resume.personal?.lastName?.trim() || 'Resume'
+      const fileName = `${firstName}-${lastName}-SnapCV.pdf`.replace(/\s+/g, '-')
 
+      // Manually trigger download to ensure filename is respected by all browsers
+      const pdfBlob = pdf.output('blob')
+      const url = URL.createObjectURL(pdfBlob)
+      const a = document.createElement('a')
+      a.style.display = 'none'
+      a.href = url
+      a.download = fileName
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      URL.revokeObjectURL(url)
       setShowConfetti(true)
       setTimeout(() => setShowConfetti(false), 3000)
     } catch (err) {

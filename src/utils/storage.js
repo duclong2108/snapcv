@@ -41,9 +41,17 @@ export function exportResumeJSON(data) {
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
+  a.style.display = 'none'
   a.href = url
-  a.download = 'snapcv-resume.json'
+  
+  // Use the user's name if available, otherwise default
+  const firstName = data.personal?.firstName?.trim() || 'My'
+  const lastName = data.personal?.lastName?.trim() || 'Resume'
+  a.download = `${firstName}-${lastName}-SnapCV-Backup.json`.replace(/\s+/g, '-')
+  
+  document.body.appendChild(a)
   a.click()
+  document.body.removeChild(a)
   URL.revokeObjectURL(url)
 }
 

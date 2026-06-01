@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
+import { Helmet } from 'react-helmet-async'
 import Footer from '../components/Footer.jsx'
 import { templates } from '../data/templates.js'
 import { PAYMENT_CONFIG } from '../utils/monetization.js'
@@ -91,6 +92,11 @@ export default function Landing() {
 
   return (
     <main className="landing">
+      <Helmet>
+        <title>SnapCV — Free Resume Builder | Build a Resume That Gets You Hired</title>
+        <meta name="description" content="Create stunning, professional resumes in minutes with beautiful, modern templates. Free resume builder with real-time preview, PDF export, and ATS-friendly designs." />
+      </Helmet>
+
       {/* Hero */}
       <section className="hero">
         <div className="hero__bg">

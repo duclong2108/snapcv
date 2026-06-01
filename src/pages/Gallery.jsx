@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { Helmet } from 'react-helmet-async'
 import { templates, categories } from '../data/templates.js'
 import Footer from '../components/Footer.jsx'
 import './Gallery.css'
@@ -19,6 +20,11 @@ export default function Gallery() {
 
   return (
     <main className="gallery-page">
+      <Helmet>
+        <title>Resume Templates Gallery | SnapCV</title>
+        <meta name="description" content="Browse our collection of professional, ATS-friendly resume templates. Choose from minimal, creative, startup, and corporate designs to land your dream job." />
+      </Helmet>
+
       <section className="gallery-hero">
         <div className="gallery-hero__bg">
           <div className="gallery-hero__orb"></div>

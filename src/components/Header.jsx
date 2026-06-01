@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
 import './Header.css'
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const location = useLocation()
+  const { user, loginWithGoogle, logout } = useAuth()
 
   const isEditor = location.pathname.startsWith('/editor')
 
@@ -42,6 +44,16 @@ export default function Header() {
           <Link to="/" className={`header__link ${location.pathname === '/' ? 'header__link--active' : ''}`}>Home</Link>
           <Link to="/templates" className={`header__link ${location.pathname === '/templates' ? 'header__link--active' : ''}`}>Templates</Link>
           <a href="#pricing" className="header__link" onClick={() => setMobileOpen(false)}>Pricing</a>
+          
+          {user ? (
+            <div className="header__user-menu">
+              <img src={user.photoURL || `https://ui-avatars.com/api/?name=${user.email}`} alt="Avatar" className="header__avatar" />
+              <button onClick={logout} className="header__link" style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>Logout</button>
+            </div>
+          ) : (
+            <button onClick={loginWithGoogle} className="header__link" style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>Sign In</button>
+          )}
+
           <Link to="/editor" className="btn btn-primary btn-sm header__cta">
             Create Resume
             <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M6.5 3.5l4.5 4.5-4.5 4.5" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round"/></svg>

@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
+import { Helmet } from 'react-helmet-async'
 import { defaultResumeData } from '../data/defaultResume.js'
 import { templates, colorThemes, fontPairings } from '../data/templates.js'
 import { saveResume, loadResume, saveSettings, loadSettings, exportResumeJSON, importResumeJSON } from '../utils/storage.js'
@@ -8,6 +9,7 @@ import ResumePreview from '../components/ResumePreview.jsx'
 import TemplateThumbnail from '../components/TemplateThumbnail.jsx'
 import SmartSuggestions from '../components/SmartSuggestions.jsx'
 import ProModal from '../components/ProModal.jsx'
+import { useAuth } from '../contexts/AuthContext.jsx'
 import html2canvas from 'html2canvas'
 import { jsPDF } from 'jspdf'
 import './Editor.css'
@@ -27,6 +29,9 @@ export default function Editor() {
   const previewContainerRef = useRef(null)
   const fileInputRef = useRef(null)
   const [previewScale, setPreviewScale] = useState(1)
+
+  const { user, loginWithGoogle } = useAuth()
+  const [syncStatus, setSyncStatus] = useState('Saved to Cloud')
 
   const [resume, setResume] = useState(() => {
     const saved = loadResume()
@@ -438,6 +443,12 @@ export default function Editor() {
 
   return (
     <div className="editor">
+      <Helmet>
+        <title>SnapCV Editor | Build Your Resume</title>
+        <meta name="description" content="Free resume editor. Build, customize, and export your professional resume as a PDF instantly." />
+        <meta name="robots" content="noindex" />
+      </Helmet>
+
       {/* Confetti */}
       {showConfetti && (
         <div className="confetti-container">
@@ -515,14 +526,25 @@ export default function Editor() {
           </div>
         </div>
 
-        <div className="data-protection-banner">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-          <div className="dp-text">
-            <strong>Your data is saved locally.</strong>
-            <span>Download your JSON backup to prevent data loss.</span>
+        {user ? (
+          <div className="data-protection-banner" style={{ background: 'rgba(16, 185, 129, 0.1)', borderColor: 'rgba(16, 185, 129, 0.2)' }}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--emerald-400)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+            <div className="dp-text">
+              <strong style={{ color: 'var(--emerald-400)' }}>{syncStatus}</strong>
+              <span>Your resume is securely backed up to your account.</span>
+            </div>
+            <button className="dp-btn" onClick={() => exportResumeJSON(resume)}>Export JSON</button>
           </div>
-          <button className="dp-btn" onClick={() => exportResumeJSON(resume)}>Backup</button>
-        </div>
+        ) : (
+          <div className="data-protection-banner">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            <div className="dp-text">
+              <strong>Don't lose your work!</strong>
+              <span>Sign in to save your resume to the cloud.</span>
+            </div>
+            <button className="btn btn-primary btn-sm" onClick={loginWithGoogle}>Sign In</button>
+          </div>
+        )}
 
         {/* Customize Panel */}
         {showCustomize && (

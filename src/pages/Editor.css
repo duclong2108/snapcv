@@ -343,6 +343,33 @@
   border: 1px solid rgba(124, 58, 237, 0.3);
 }
 
+.section-nav-btn--add {
+  color: var(--violet-400);
+  border: 1px dashed rgba(124, 58, 237, 0.4) !important;
+  background: rgba(124, 58, 237, 0.05);
+}
+
+.section-nav-btn--add:hover {
+  color: var(--white) !important;
+  border: 1px solid var(--violet-500) !important;
+  background: rgba(124, 58, 237, 0.15) !important;
+  box-shadow: 0 0 10px rgba(124, 58, 237, 0.2);
+}
+
+.editor__sections-nav::-webkit-scrollbar {
+  height: 4px;
+}
+.editor__sections-nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+.editor__sections-nav::-webkit-scrollbar-thumb {
+  background: var(--glass-border);
+  border-radius: var(--radius-full);
+}
+.editor__sections-nav::-webkit-scrollbar-thumb:hover {
+  background: var(--navy-500);
+}
+
 .section-nav-btn__icon {
   font-size: 14px;
 }

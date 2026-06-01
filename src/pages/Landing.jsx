@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import Footer from '../components/Footer.jsx'
 import { templates } from '../data/templates.js'
@@ -70,6 +70,18 @@ const testimonials = [
 
 export default function Landing() {
   const observerRef = useRef(null)
+  const location = useLocation()
+
+  useEffect(() => {
+    if (location.hash) {
+      const element = document.getElementById(location.hash.substring(1))
+      if (element) {
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: 'smooth' })
+        }, 100)
+      }
+    }
+  }, [location])
 
   useEffect(() => {
     observerRef.current = new IntersectionObserver(

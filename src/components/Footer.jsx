@@ -36,7 +36,7 @@ export default function Footer() {
             <h4 className="footer__col-title">Product</h4>
             <Link to="/templates" className="footer__link">Templates</Link>
             <Link to="/editor" className="footer__link">Resume Builder</Link>
-            <a href="#pricing" className="footer__link">Pricing</a>
+            <Link to="/#pricing" className="footer__link">Pricing</Link>
           </div>
 
           <div className="footer__col">

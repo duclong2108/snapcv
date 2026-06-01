@@ -1064,3 +1064,309 @@
   color: #3B82F6;
   margin-top: 4px;
 }
+
+/* =========================================
+   STARTUP TEMPLATE
+   High-contrast, bold tech design
+========================================= */
+.resume-startup {
+  padding: 40px;
+  background-color: var(--resume-bg);
+  color: #1e293b;
+  border-top: 8px solid var(--resume-primary);
+}
+
+.rstart-header {
+  margin-bottom: 30px;
+}
+
+.rstart-name {
+  font-family: var(--resume-font-heading);
+  font-size: 32px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -1px;
+  margin-bottom: 4px;
+}
+
+.text-accent {
+  color: var(--resume-primary);
+}
+
+.rstart-title {
+  font-family: var(--resume-font-body);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--resume-accent);
+  margin-bottom: 12px;
+}
+
+.rstart-contact {
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.rstart-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 40px;
+}
+
+.rstart-section {
+  margin-bottom: 24px;
+}
+
+.rstart-section-title {
+  font-family: var(--resume-font-heading);
+  font-size: 14px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 6px;
+  margin-bottom: 16px;
+  color: #0f172a;
+}
+
+.rstart-entry {
+  margin-bottom: 16px;
+}
+
+.rstart-entry-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 2px;
+}
+
+.rstart-entry-role {
+  font-weight: 700;
+  font-size: 14px;
+  color: #0f172a;
+}
+
+.rstart-company {
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--resume-primary);
+  margin-bottom: 6px;
+}
+
+.rstart-date {
+  font-size: 12px;
+  font-weight: 600;
+  color: #94a3b8;
+}
+
+.rstart-text, .rstart-bullets {
+  font-size: 12px;
+  color: #475569;
+  line-height: 1.6;
+}
+
+.rstart-bullets {
+  padding-left: 16px;
+  margin: 0;
+}
+
+.rstart-bullets li {
+  margin-bottom: 4px;
+}
+
+.rstart-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.rstart-skill {
+  background: #f1f5f9;
+  color: #334155;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  border: 1px solid #e2e8f0;
+}
+
+.rstart-project {
+  margin-bottom: 12px;
+}
+
+.rstart-project-name {
+  font-weight: 700;
+  font-size: 13px;
+  color: #0f172a;
+  margin-bottom: 2px;
+}
+
+.rstart-link {
+  font-size: 11px;
+  color: var(--resume-primary);
+  margin-top: 4px;
+  font-weight: 600;
+}
+
+.rstart-edu {
+  margin-bottom: 12px;
+}
+
+.rstart-edu-school {
+  font-weight: 700;
+  font-size: 13px;
+  color: #0f172a;
+}
+
+.rstart-edu-degree {
+  font-size: 12px;
+  color: #475569;
+  margin-bottom: 2px;
+}
+
+/* =========================================
+   CORPORATE TEMPLATE
+   Traditional, highly structured, serif headers
+========================================= */
+.resume-corporate {
+  padding: 40px;
+  background-color: var(--resume-bg);
+  color: #333333;
+}
+
+.rcorp-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.rcorp-name {
+  font-family: var(--resume-font-heading);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--resume-primary);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 6px;
+}
+
+.rcorp-divider {
+  width: 100%;
+  height: 2px;
+  background-color: var(--resume-primary);
+  margin: 8px 0;
+}
+
+.rcorp-title {
+  font-family: var(--resume-font-body);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--resume-accent);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.rcorp-contact {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  font-size: 11px;
+  color: #666;
+}
+
+.rcorp-contact span:not(:last-child)::after {
+  content: "|";
+  margin-left: 16px;
+  color: #ccc;
+}
+
+.rcorp-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.rcorp-section-title {
+  font-family: var(--resume-font-heading);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--resume-primary);
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 4px;
+  margin-bottom: 12px;
+}
+
+.rcorp-entry {
+  margin-bottom: 12px;
+}
+
+.rcorp-entry-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 2px;
+}
+
+.rcorp-company {
+  font-weight: 700;
+  font-size: 13px;
+  color: #111;
+}
+
+.rcorp-location {
+  font-size: 11px;
+  color: #666;
+  font-style: italic;
+}
+
+.rcorp-entry-subheader {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 6px;
+}
+
+.rcorp-role {
+  font-weight: 600;
+  font-size: 12px;
+  font-style: italic;
+  color: #333;
+}
+
+.rcorp-date {
+  font-size: 11px;
+  font-weight: 500;
+  color: #444;
+}
+
+.rcorp-text, .rcorp-bullets {
+  font-family: var(--resume-font-body);
+  font-size: 11px;
+  color: #444;
+  line-height: 1.5;
+}
+
+.rcorp-bullets {
+  padding-left: 20px;
+  margin: 0;
+}
+
+.rcorp-bullets li {
+  margin-bottom: 3px;
+  list-style-type: square;
+}
+
+.rcorp-skills {
+  font-size: 11px;
+  color: #444;
+  line-height: 1.6;
+}
+
+.rcorp-link {
+  font-size: 11px;
+  font-weight: normal;
+  color: var(--resume-accent);
+  font-style: normal;
+}

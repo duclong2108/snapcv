@@ -136,6 +136,39 @@ export default function Editor() {
     }))
   }
 
+  const updateCustomItem = (sectionId, itemId, field, value) => {
+    setResume(prev => ({
+      ...prev,
+      customSections: prev.customSections.map(s => {
+        if (s.id === sectionId) {
+          return {
+            ...s,
+            items: s.items.map(i => i.id === itemId ? { ...i, [field]: value } : i)
+          }
+        }
+        return s
+      })
+    }))
+  }
+
+  const moveCustomItem = (sectionId, idx, direction) => {
+    setResume(prev => ({
+      ...prev,
+      customSections: prev.customSections.map(s => {
+        if (s.id === sectionId) {
+          const arr = [...s.items]
+          if (direction === 'up' && idx > 0) {
+            [arr[idx - 1], arr[idx]] = [arr[idx], arr[idx - 1]]
+          } else if (direction === 'down' && idx < arr.length - 1) {
+            [arr[idx], arr[idx + 1]] = [arr[idx + 1], arr[idx]]
+          }
+          return { ...s, items: arr }
+        }
+        return s
+      })
+    }))
+  }
+
   const updateBullet = (expId, bulletIdx, value) => {
     setResume(prev => ({
       ...prev,
@@ -238,6 +271,18 @@ export default function Editor() {
       ...prev,
       projects: prev.projects.filter(proj => proj.id !== id)
     }))
+  }
+
+  const moveItem = (section, idx, direction) => {
+    setResume(prev => {
+      const arr = [...prev[section]]
+      if (direction === 'up' && idx > 0) {
+        [arr[idx - 1], arr[idx]] = [arr[idx], arr[idx - 1]]
+      } else if (direction === 'down' && idx < arr.length - 1) {
+        [arr[idx], arr[idx + 1]] = [arr[idx + 1], arr[idx]]
+      }
+      return { ...prev, [section]: arr }
+    })
   }
 
   // Handle selecting a template (with pro check)
@@ -497,6 +542,20 @@ export default function Editor() {
               <span>{sec.label}</span>
             </button>
           ))}
+          {resume.customSections?.map(sec => (
+            <button
+              key={sec.id}
+              className={`section-nav-btn ${activeSection === sec.id ? 'section-nav-btn--active' : ''}`}
+              onClick={() => setActiveSection(sec.id)}
+            >
+              <span className="section-nav-btn__icon">📌</span>
+              <span>{sec.name}</span>
+            </button>
+          ))}
+          <button className="section-nav-btn section-nav-btn--add" onClick={addCustomSection}>
+            <span className="section-nav-btn__icon">+</span>
+            <span>Add Custom Section</span>
+          </button>
         </div>
 
         {/* Form Content */}
@@ -573,7 +632,11 @@ export default function Editor() {
                 <div key={exp.id} className="form-card">
                   <div className="form-card__header">
                     <span className="form-card__number">#{idx + 1}</span>
-                    <button className="form-card__remove" onClick={() => removeExperience(exp.id)}>×</button>
+                    <div className="form-card__actions">
+                      <button className="form-card__action" onClick={() => moveItem('experience', idx, 'up')} disabled={idx === 0} title="Move Up">↑</button>
+                      <button className="form-card__action" onClick={() => moveItem('experience', idx, 'down')} disabled={idx === resume.experience.length - 1} title="Move Down">↓</button>
+                      <button className="form-card__remove" onClick={() => removeExperience(exp.id)} title="Remove">×</button>
+                    </div>
                   </div>
                   <div className="form-grid">
                     <div className="form-field">
@@ -647,7 +710,11 @@ export default function Editor() {
                 <div key={edu.id} className="form-card">
                   <div className="form-card__header">
                     <span className="form-card__number">#{idx + 1}</span>
-                    <button className="form-card__remove" onClick={() => removeEducation(edu.id)}>×</button>
+                    <div className="form-card__actions">
+                      <button className="form-card__action" onClick={() => moveItem('education', idx, 'up')} disabled={idx === 0} title="Move Up">↑</button>
+                      <button className="form-card__action" onClick={() => moveItem('education', idx, 'down')} disabled={idx === resume.education.length - 1} title="Move Down">↓</button>
+                      <button className="form-card__remove" onClick={() => removeEducation(edu.id)} title="Remove">×</button>
+                    </div>
                   </div>
                   <div className="form-field">
                     <label>School</label>
@@ -708,7 +775,11 @@ export default function Editor() {
                 <div key={proj.id} className="form-card">
                   <div className="form-card__header">
                     <span className="form-card__number">#{idx + 1}</span>
-                    <button className="form-card__remove" onClick={() => removeProject(proj.id)}>×</button>
+                    <div className="form-card__actions">
+                      <button className="form-card__action" onClick={() => moveItem('projects', idx, 'up')} disabled={idx === 0} title="Move Up">↑</button>
+                      <button className="form-card__action" onClick={() => moveItem('projects', idx, 'down')} disabled={idx === resume.projects.length - 1} title="Move Down">↓</button>
+                      <button className="form-card__remove" onClick={() => removeProject(proj.id)} title="Remove">×</button>
+                    </div>
                   </div>
                   <div className="form-field">
                     <label>Project Name</label>
@@ -724,6 +795,57 @@ export default function Editor() {
                   </div>
                 </div>
               ))}
+            </div>
+          )}
+          {/* Custom Sections */}
+          {activeSection.startsWith('custom_') && resume.customSections?.find(s => s.id === activeSection) && (
+            <div className="form-section">
+              <div className="form-section__header">
+                <input 
+                  className="form-section__title-input"
+                  value={resume.customSections.find(s => s.id === activeSection).name}
+                  onChange={(e) => updateCustomSectionName(activeSection, e.target.value)}
+                  placeholder="Section Name (e.g. Certifications)"
+                />
+                <div>
+                  <button className="btn btn-sm btn-primary" style={{ marginRight: '8px' }} onClick={() => addCustomItem(activeSection)}>+ Add</button>
+                  <button className="btn btn-sm" style={{ color: 'var(--rose-400)', border: '1px solid var(--rose-400)' }} onClick={() => removeCustomSection(activeSection)}>Delete Section</button>
+                </div>
+              </div>
+              
+              {resume.customSections.find(s => s.id === activeSection).items.map((item, idx) => (
+                <div key={item.id} className="form-card">
+                  <div className="form-card__header">
+                    <span className="form-card__number">#{idx + 1}</span>
+                    <div className="form-card__actions">
+                      <button className="form-card__action" onClick={() => moveCustomItem(activeSection, idx, 'up')} disabled={idx === 0} title="Move Up">↑</button>
+                      <button className="form-card__action" onClick={() => moveCustomItem(activeSection, idx, 'down')} disabled={idx === resume.customSections.find(s => s.id === activeSection).items.length - 1} title="Move Down">↓</button>
+                      <button className="form-card__remove" onClick={() => removeCustomItem(activeSection, item.id)} title="Remove">×</button>
+                    </div>
+                  </div>
+                  <div className="form-grid">
+                    <div className="form-field">
+                      <label>Title</label>
+                      <input value={item.title} onChange={e => updateCustomItem(activeSection, item.id, 'title', e.target.value)} placeholder="e.g. AWS Certified Developer" />
+                    </div>
+                    <div className="form-field">
+                      <label>Subtitle / Organization</label>
+                      <input value={item.subtitle} onChange={e => updateCustomItem(activeSection, item.id, 'subtitle', e.target.value)} placeholder="e.g. Amazon Web Services" />
+                    </div>
+                  </div>
+                  <div className="form-field">
+                    <label>Date</label>
+                    <input value={item.date} onChange={e => updateCustomItem(activeSection, item.id, 'date', e.target.value)} placeholder="e.g. 2023" />
+                  </div>
+                  <div className="form-field">
+                    <label>Description / Bullets (Optional)</label>
+                    <textarea value={item.description} onChange={e => updateCustomItem(activeSection, item.id, 'description', e.target.value)} placeholder="Additional details..." rows={2} />
+                  </div>
+                </div>
+              ))}
+              {resume.customSections.find(s => s.id === activeSection).items.length === 0 && (
+                <p className="form-empty">No items yet. Click "+ Add" to add an entry.</p>
+              )}
             </div>
           )}
         </div>

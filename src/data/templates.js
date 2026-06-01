@@ -52,6 +52,24 @@ export const templates = [
     free: false,
     popular: false,
     colors: { primary: '#374151', accent: '#6366F1', bg: '#FFFFFF' }
+  },
+  {
+    id: 'startup',
+    name: 'Startup',
+    category: 'Creative',
+    description: 'High-contrast, punchy layout designed for modern tech companies and startups.',
+    free: false,
+    popular: true,
+    colors: { primary: '#F97316', accent: '#1E293B', bg: '#FAFAFA' }
+  },
+  {
+    id: 'corporate',
+    name: 'Corporate',
+    category: 'Executive',
+    description: 'Traditional, highly ATS-optimized layout with authoritative styling for corporate roles.',
+    free: false,
+    popular: false,
+    colors: { primary: '#032145', accent: '#64748B', bg: '#FFFFFF' }
   }
 ]
 

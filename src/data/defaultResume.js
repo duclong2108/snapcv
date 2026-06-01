@@ -85,7 +85,8 @@ export const defaultResumeData = {
   languages: [
     { name: 'English', level: 'Native' },
     { name: 'Spanish', level: 'Conversational' }
-  ]
+  ],
+  customSections: []
 }
 
 export function getEmptyResumeData() {
@@ -105,6 +106,7 @@ export function getEmptyResumeData() {
     education: [],
     skills: [],
     projects: [],
-    languages: []
+    languages: [],
+    customSections: []
   }
 }

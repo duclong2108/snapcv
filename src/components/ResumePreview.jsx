@@ -1,8 +1,9 @@
 import { forwardRef } from 'react'
+import RichText from './RichText.jsx'
 import './ResumePreview.css'
 
 const ResumePreview = forwardRef(({ data, settings, theme, font }, ref) => {
-  const { personal, experience, education, skills, projects } = data
+  const { personal, experience, education, skills, projects, customSections = [] } = data
   const templateId = settings.template
   const layout = settings.layout
 
@@ -36,7 +37,7 @@ const ResumePreview = forwardRef(({ data, settings, theme, font }, ref) => {
           {personal.summary && (
             <section className="rm-section">
               <h2 className="rm-section-title">Summary</h2>
-              <p className="rm-text">{personal.summary}</p>
+              <RichText text={personal.summary} className="rm-text" />
             </section>
           )}
 
@@ -54,7 +55,7 @@ const ResumePreview = forwardRef(({ data, settings, theme, font }, ref) => {
                   </div>
                   <ul className="rm-bullets">
                     {exp.bullets.filter(b => b).map((bullet, i) => (
-                      <li key={i}>{bullet}</li>
+                      <li key={i}><RichText text={bullet} /></li>
                     ))}
                   </ul>
                 </div>
@@ -92,11 +93,29 @@ const ResumePreview = forwardRef(({ data, settings, theme, font }, ref) => {
               {projects.map(proj => (
                 <div key={proj.id} className="rm-entry">
                   <h3 className="rm-entry-title">{proj.name} {proj.link && <span className="rm-link">{proj.link}</span>}</h3>
-                  <p className="rm-text">{proj.description}</p>
+                  <RichText text={proj.description} className="rm-text" />
                 </div>
               ))}
             </section>
           )}
+
+          {customSections.map(sec => (
+            <section key={sec.id} className="rm-section">
+              <h2 className="rm-section-title">{sec.name}</h2>
+              {sec.items.map(item => (
+                <div key={item.id} className="rm-entry">
+                  <div className="rm-entry-header">
+                    <div>
+                      <h3 className="rm-entry-title">{item.title}</h3>
+                      {item.subtitle && <p className="rm-entry-subtitle">{item.subtitle}</p>}
+                    </div>
+                    {item.date && <span className="rm-entry-date">{item.date}</span>}
+                  </div>
+                  {item.description && <RichText text={item.description} className="rm-text" />}
+                </div>
+              ))}
+            </section>
+          ))}
         </div>
       )}
 
@@ -121,8 +140,8 @@ const ResumePreview = forwardRef(({ data, settings, theme, font }, ref) => {
 
           {personal.summary && (
             <section className="rmod-section">
-              <h2 className="rmod-section-title"><span className="rmod-icon">📝</span> Summary</h2>
-              <p className="rmod-text">{personal.summary}</p>
+              <h2 className="rmod-section-title"><span className="rmod-icon">👤</span> Profile</h2>
+              <RichText text={personal.summary} className="rmod-text" />
             </section>
           )}
 
@@ -140,7 +159,7 @@ const ResumePreview = forwardRef(({ data, settings, theme, font }, ref) => {
                   </div>
                   <ul className="rmod-bullets">
                     {exp.bullets.filter(b => b).map((bullet, i) => (
-                      <li key={i}>{bullet}</li>
+                      <li key={i}><RichText text={bullet} /></li>
                     ))}
                   </ul>
                 </div>
@@ -182,12 +201,30 @@ const ResumePreview = forwardRef(({ data, settings, theme, font }, ref) => {
               {projects.map(proj => (
                 <div key={proj.id} className="rmod-entry">
                   <h3 className="rmod-entry-title">{proj.name}</h3>
-                  <p className="rmod-text">{proj.description}</p>
+                  <RichText text={proj.description} className="rmod-text" />
                   {proj.link && <p className="rmod-link">{proj.link}</p>}
                 </div>
               ))}
             </section>
           )}
+
+          {customSections.map(sec => (
+            <section key={sec.id} className="rmod-section">
+              <h2 className="rmod-section-title"><span className="rmod-icon">📌</span> {sec.name}</h2>
+              {sec.items.map(item => (
+                <div key={item.id} className="rmod-entry">
+                  <div className="rmod-entry-header">
+                    <div>
+                      <h3 className="rmod-entry-title">{item.title}</h3>
+                      {item.subtitle && <p className="rmod-entry-company">{item.subtitle}</p>}
+                    </div>
+                    {item.date && <span className="rmod-date">{item.date}</span>}
+                  </div>
+                  {item.description && <RichText text={item.description} className="rmod-text" style={{ marginTop: '4px' }} />}
+                </div>
+              ))}
+            </section>
+          ))}
         </div>
       )}
 
@@ -215,7 +252,7 @@ const ResumePreview = forwardRef(({ data, settings, theme, font }, ref) => {
           {personal.summary && (
             <section className="rdev-section">
               <h2 className="rdev-section-title">{'// '}About</h2>
-              <p className="rdev-text">{personal.summary}</p>
+              <RichText text={personal.summary} className="rdev-text" />
             </section>
           )}
 
@@ -230,7 +267,7 @@ const ResumePreview = forwardRef(({ data, settings, theme, font }, ref) => {
                   </div>
                   <ul className="rdev-bullets">
                     {exp.bullets.filter(b => b).map((bullet, i) => (
-                      <li key={i}><span className="rdev-bullet-arrow">▸</span> {bullet}</li>
+                      <li key={i}><span className="rdev-bullet-arrow">▸</span> <RichText text={bullet} /></li>
                     ))}
                   </ul>
                 </div>
@@ -267,12 +304,25 @@ const ResumePreview = forwardRef(({ data, settings, theme, font }, ref) => {
               {projects.map(proj => (
                 <div key={proj.id} className="rdev-entry">
                   <h3 className="rdev-entry-title">📁 {proj.name}</h3>
-                  <p className="rdev-text">{proj.description}</p>
+                  <RichText text={proj.description} className="rdev-text" />
                   {proj.link && <p className="rdev-link-text">🔗 {proj.link}</p>}
                 </div>
               ))}
             </section>
           )}
+
+          {customSections.map(sec => (
+            <section key={sec.id} className="rdev-section">
+              <h2 className="rdev-section-title">{'// '}{sec.name}</h2>
+              {sec.items.map(item => (
+                <div key={item.id} className="rdev-entry">
+                  <h3 className="rdev-entry-title">🏷️ {item.title} {item.subtitle && <span className="rdev-at">@</span>} {item.subtitle}</h3>
+                  <p className="rdev-text">{item.date}</p>
+                  {item.description && <RichText text={item.description} className="rdev-text" style={{ marginTop: '4px' }} />}
+                </div>
+              ))}
+            </section>
+          ))}
         </div>
       )}
 
@@ -325,7 +375,7 @@ const ResumePreview = forwardRef(({ data, settings, theme, font }, ref) => {
             {personal.summary && (
               <section className="rexec-section">
                 <h2 className="rexec-section-title">Professional Profile</h2>
-                <p className="rexec-text">{personal.summary}</p>
+                <RichText text={personal.summary} className="rexec-text" />
               </section>
             )}
 
@@ -343,7 +393,7 @@ const ResumePreview = forwardRef(({ data, settings, theme, font }, ref) => {
                     </div>
                     <ul className="rexec-bullets">
                       {exp.bullets.filter(b => b).map((bullet, i) => (
-                        <li key={i}>{bullet}</li>
+                        <li key={i}><RichText text={bullet} /></li>
                       ))}
                     </ul>
                   </div>
@@ -351,17 +401,35 @@ const ResumePreview = forwardRef(({ data, settings, theme, font }, ref) => {
               </section>
             )}
 
-            {projects.length > 0 && (
+          {projects.length > 0 && (
               <section className="rexec-section">
                 <h2 className="rexec-section-title">Key Projects</h2>
                 {projects.map(proj => (
                   <div key={proj.id} className="rexec-entry">
                     <h3 className="rexec-entry-title">{proj.name} {proj.link && <span className="rexec-link">{proj.link}</span>}</h3>
-                    <p className="rexec-text">{proj.description}</p>
+                    <RichText text={proj.description} className="rexec-text" />
                   </div>
                 ))}
               </section>
             )}
+
+            {customSections.map(sec => (
+              <section key={sec.id} className="rexec-section">
+                <h2 className="rexec-section-title">{sec.name}</h2>
+                {sec.items.map(item => (
+                  <div key={item.id} className="rexec-entry">
+                    <div className="rexec-entry-header">
+                      <div>
+                        <h3 className="rexec-entry-title">{item.title}</h3>
+                        {item.subtitle && <p className="rexec-entry-company">{item.subtitle}</p>}
+                      </div>
+                      {item.date && <span className="rexec-entry-date">{item.date}</span>}
+                    </div>
+                    {item.description && <RichText text={item.description} className="rexec-text" style={{ marginTop: '4px' }} />}
+                  </div>
+                ))}
+              </section>
+            ))}
           </div>
         </div>
       )}
@@ -391,7 +459,7 @@ const ResumePreview = forwardRef(({ data, settings, theme, font }, ref) => {
                 <span className="rcre-section-icon">◈</span>
                 <h2 className="rcre-section-title">About Me</h2>
               </div>
-              <p className="rcre-text">{personal.summary}</p>
+              <RichText text={personal.summary} className="rcre-text" />
             </section>
           )}
 
@@ -414,7 +482,7 @@ const ResumePreview = forwardRef(({ data, settings, theme, font }, ref) => {
                     </div>
                     <ul className="rcre-bullets">
                       {exp.bullets.filter(b => b).map((bullet, i) => (
-                        <li key={i}>{bullet}</li>
+                        <li key={i}><RichText text={bullet} /></li>
                       ))}
                     </ul>
                   </div>
@@ -465,13 +533,31 @@ const ResumePreview = forwardRef(({ data, settings, theme, font }, ref) => {
                 {projects.map(proj => (
                   <div key={proj.id} className="rcre-project-card">
                     <h3 className="rcre-entry-title">{proj.name}</h3>
-                    <p className="rcre-text">{proj.description}</p>
+                    <RichText text={proj.description} className="rcre-text" />
                     {proj.link && <p className="rcre-small">↗ {proj.link}</p>}
                   </div>
                 ))}
               </div>
             </section>
           )}
+
+          {customSections.map(sec => (
+            <section key={sec.id} className="rcre-section">
+              <div className="rcre-section-header">
+                <span className="rcre-section-icon">◈</span>
+                <h2 className="rcre-section-title">{sec.name}</h2>
+              </div>
+              <div className="rcre-projects-grid">
+                {sec.items.map(item => (
+                  <div key={item.id} className="rcre-project-card">
+                    <h3 className="rcre-entry-title">{item.title} {item.subtitle && <span style={{fontWeight:'normal'}}>| {item.subtitle}</span>}</h3>
+                    {item.date && <p className="rcre-small">{item.date}</p>}
+                    {item.description && <RichText text={item.description} className="rcre-text" style={{marginTop:'4px'}} />}
+                  </div>
+                ))}
+              </div>
+            </section>
+          ))}
         </div>
       )}
 
@@ -529,7 +615,7 @@ const ResumePreview = forwardRef(({ data, settings, theme, font }, ref) => {
             {personal.summary && (
               <section className="rele-section">
                 <h2 className="rele-section-title">Profile</h2>
-                <p className="rele-text">{personal.summary}</p>
+                <RichText text={personal.summary} className="rele-text" />
               </section>
             )}
 
@@ -547,7 +633,7 @@ const ResumePreview = forwardRef(({ data, settings, theme, font }, ref) => {
                     </div>
                     <ul className="rele-bullets">
                       {exp.bullets.filter(b => b).map((bullet, i) => (
-                        <li key={i}>{bullet}</li>
+                        <li key={i}><RichText text={bullet} /></li>
                       ))}
                     </ul>
                   </div>
@@ -561,13 +647,237 @@ const ResumePreview = forwardRef(({ data, settings, theme, font }, ref) => {
                 {projects.map(proj => (
                   <div key={proj.id} className="rele-entry">
                     <h3 className="rele-entry-role">{proj.name}</h3>
-                    <p className="rele-text">{proj.description}</p>
+                    <RichText text={proj.description} className="rele-text" />
                     {proj.link && <p className="rele-link">↗ {proj.link}</p>}
                   </div>
                 ))}
               </section>
             )}
+
+            {customSections.map(sec => (
+              <section key={sec.id} className="rele-section">
+                <h2 className="rele-section-title">{sec.name}</h2>
+                {sec.items.map(item => (
+                  <div key={item.id} className="rele-entry">
+                    <div className="rele-entry-top">
+                      <div>
+                        <h3 className="rele-entry-role">{item.title}</h3>
+                        {item.subtitle && <p className="rele-entry-company">{item.subtitle}</p>}
+                      </div>
+                      {item.date && <span className="rele-entry-date">{item.date}</span>}
+                    </div>
+                    {item.description && <RichText text={item.description} className="rele-text" style={{marginTop:'4px'}} />}
+                  </div>
+                ))}
+              </section>
+            ))}
           </main>
+        </div>
+      )}
+
+      {/* STARTUP TEMPLATE */}
+      {templateId === 'startup' && (
+        <div className="resume-startup">
+          <header className="rstart-header">
+            <h1 className="rstart-name">{personal.firstName} <span className="text-accent">{personal.lastName}</span></h1>
+            <p className="rstart-title">{personal.title}</p>
+            <div className="rstart-contact">
+              {personal.email && <span>{personal.email}</span>}
+              {personal.phone && <span>{personal.phone}</span>}
+              {personal.location && <span>{personal.location}</span>}
+              {personal.website && <span>{personal.website}</span>}
+            </div>
+          </header>
+
+          <div className="rstart-grid">
+            <div className="rstart-main">
+              {personal.summary && (
+                <section className="rstart-section">
+                  <h2 className="rstart-section-title">Summary</h2>
+                  <RichText text={personal.summary} className="rstart-text" />
+                </section>
+              )}
+
+              {experience.length > 0 && (
+                <section className="rstart-section">
+                  <h2 className="rstart-section-title">Experience</h2>
+                  {experience.map(exp => (
+                    <div key={exp.id} className="rstart-entry">
+                      <div className="rstart-entry-header">
+                        <h3 className="rstart-entry-role">{exp.position}</h3>
+                        <span className="rstart-date">{exp.startDate} — {exp.endDate}</span>
+                      </div>
+                      <p className="rstart-company">{exp.company}{exp.location ? `, ${exp.location}` : ''}</p>
+                      <ul className="rstart-bullets">
+                        {exp.bullets.filter(b => b).map((bullet, i) => (
+                          <li key={i}><RichText text={bullet} /></li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </section>
+              )}
+              
+              {customSections.map(sec => (
+                <section key={sec.id} className="rstart-section">
+                  <h2 className="rstart-section-title">{sec.name}</h2>
+                  {sec.items.map(item => (
+                    <div key={item.id} className="rstart-entry">
+                      <div className="rstart-entry-header">
+                        <h3 className="rstart-entry-role">{item.title}</h3>
+                        <span className="rstart-date">{item.date}</span>
+                      </div>
+                      {item.subtitle && <p className="rstart-company">{item.subtitle}</p>}
+                      {item.description && <RichText text={item.description} className="rstart-text" />}
+                    </div>
+                  ))}
+                </section>
+              ))}
+            </div>
+
+            <div className="rstart-sidebar">
+              {skills.length > 0 && (
+                <section className="rstart-section">
+                  <h2 className="rstart-section-title">Skills</h2>
+                  <div className="rstart-skills">
+                    {skills.map((skill, i) => (
+                      <span key={i} className="rstart-skill">{skill}</span>
+                    ))}
+                  </div>
+                </section>
+              )}
+
+              {projects.length > 0 && (
+                <section className="rstart-section">
+                  <h2 className="rstart-section-title">Projects</h2>
+                  {projects.map(proj => (
+                    <div key={proj.id} className="rstart-project">
+                      <h3 className="rstart-project-name">{proj.name}</h3>
+                      <RichText text={proj.description} className="rstart-text" />
+                      {proj.link && <p className="rstart-link">{proj.link}</p>}
+                    </div>
+                  ))}
+                </section>
+              )}
+
+              {education.length > 0 && (
+                <section className="rstart-section">
+                  <h2 className="rstart-section-title">Education</h2>
+                  {education.map(edu => (
+                    <div key={edu.id} className="rstart-edu">
+                      <h3 className="rstart-edu-school">{edu.school}</h3>
+                      <p className="rstart-edu-degree">{edu.degree}</p>
+                      <p className="rstart-date">{edu.startDate} — {edu.endDate}</p>
+                    </div>
+                  ))}
+                </section>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* CORPORATE TEMPLATE */}
+      {templateId === 'corporate' && (
+        <div className="resume-corporate">
+          <header className="rcorp-header">
+            <h1 className="rcorp-name">{personal.firstName} {personal.lastName}</h1>
+            <div className="rcorp-divider"></div>
+            <p className="rcorp-title">{personal.title}</p>
+            <div className="rcorp-contact">
+              {personal.email && <span>{personal.email}</span>}
+              {personal.phone && <span>{personal.phone}</span>}
+              {personal.location && <span>{personal.location}</span>}
+              {personal.website && <span>{personal.website}</span>}
+            </div>
+          </header>
+
+          <div className="rcorp-content">
+            {personal.summary && (
+              <section className="rcorp-section">
+                <h2 className="rcorp-section-title">PROFESSIONAL SUMMARY</h2>
+                <RichText text={personal.summary} className="rcorp-text" />
+              </section>
+            )}
+
+            {experience.length > 0 && (
+              <section className="rcorp-section">
+                <h2 className="rcorp-section-title">PROFESSIONAL EXPERIENCE</h2>
+                {experience.map(exp => (
+                  <div key={exp.id} className="rcorp-entry">
+                    <div className="rcorp-entry-header">
+                      <h3 className="rcorp-company">{exp.company}</h3>
+                      <span className="rcorp-location">{exp.location}</span>
+                    </div>
+                    <div className="rcorp-entry-subheader">
+                      <span className="rcorp-role">{exp.position}</span>
+                      <span className="rcorp-date">{exp.startDate} — {exp.endDate}</span>
+                    </div>
+                    <ul className="rcorp-bullets">
+                      {exp.bullets.filter(b => b).map((bullet, i) => (
+                        <li key={i}><RichText text={bullet} /></li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </section>
+            )}
+
+            {education.length > 0 && (
+              <section className="rcorp-section">
+                <h2 className="rcorp-section-title">EDUCATION</h2>
+                {education.map(edu => (
+                  <div key={edu.id} className="rcorp-entry">
+                    <div className="rcorp-entry-header">
+                      <h3 className="rcorp-company">{edu.school}</h3>
+                      <span className="rcorp-location">{edu.location}</span>
+                    </div>
+                    <div className="rcorp-entry-subheader">
+                      <span className="rcorp-role">{edu.degree}{edu.gpa ? `, GPA: ${edu.gpa}` : ''}</span>
+                      <span className="rcorp-date">{edu.startDate} — {edu.endDate}</span>
+                    </div>
+                  </div>
+                ))}
+              </section>
+            )}
+
+            {skills.length > 0 && (
+              <section className="rcorp-section">
+                <h2 className="rcorp-section-title">SKILLS & EXPERTISE</h2>
+                <div className="rcorp-skills">
+                  {skills.join(' • ')}
+                </div>
+              </section>
+            )}
+
+            {projects.length > 0 && (
+              <section className="rcorp-section">
+                <h2 className="rcorp-section-title">PROJECTS</h2>
+                {projects.map(proj => (
+                  <div key={proj.id} className="rcorp-entry">
+                    <h3 className="rcorp-role">{proj.name} {proj.link && <span className="rcorp-link">({proj.link})</span>}</h3>
+                    <RichText text={proj.description} className="rcorp-text" />
+                  </div>
+                ))}
+              </section>
+            )}
+
+            {customSections.map(sec => (
+              <section key={sec.id} className="rcorp-section">
+                <h2 className="rcorp-section-title">{sec.name.toUpperCase()}</h2>
+                {sec.items.map(item => (
+                  <div key={item.id} className="rcorp-entry">
+                    <div className="rcorp-entry-header">
+                      <h3 className="rcorp-role">{item.title}</h3>
+                      {item.date && <span className="rcorp-date">{item.date}</span>}
+                    </div>
+                    {item.subtitle && <div className="rcorp-company" style={{marginBottom:'4px'}}>{item.subtitle}</div>}
+                    {item.description && <RichText text={item.description} className="rcorp-text" />}
+                  </div>
+                ))}
+              </section>
+            ))}
+          </div>
         </div>
       )}
     </div>

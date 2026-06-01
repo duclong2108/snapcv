@@ -6,6 +6,7 @@ import { saveResume, loadResume, saveSettings, loadSettings, exportResumeJSON, i
 import { isPro, PAYMENT_CONFIG } from '../utils/monetization.js'
 import ResumePreview from '../components/ResumePreview.jsx'
 import TemplateThumbnail from '../components/TemplateThumbnail.jsx'
+import SmartSuggestions from '../components/SmartSuggestions.jsx'
 import ProModal from '../components/ProModal.jsx'
 import html2canvas from 'html2canvas'
 import { jsPDF } from 'jspdf'
@@ -385,6 +386,15 @@ export default function Editor() {
           </div>
         </div>
 
+        <div className="data-protection-banner">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          <div className="dp-text">
+            <strong>Your data is saved locally.</strong>
+            <span>Download your JSON backup to prevent data loss.</span>
+          </div>
+          <button className="dp-btn" onClick={() => exportResumeJSON(resume)}>Backup</button>
+        </div>
+
         {/* Customize Panel */}
         {showCustomize && (
           <div className="customize-panel">
@@ -578,6 +588,23 @@ export default function Editor() {
                   </div>
                   <div className="form-field">
                     <label>Bullet Points</label>
+                    <SmartSuggestions 
+                      jobTitle={exp.position} 
+                      userIsPro={userIsPro} 
+                      onSelect={(text) => {
+                        // Add the text as a new bullet point
+                        setResume(prev => ({
+                          ...prev,
+                          experience: prev.experience.map(e =>
+                            e.id === exp.id ? { ...e, bullets: [...e.bullets, text] } : e
+                          )
+                        }))
+                      }}
+                      onProClick={() => {
+                        setProFeature('AI Smart Suggestions')
+                        setShowProModal(true)
+                      }}
+                    />
                     {exp.bullets.map((bullet, bIdx) => (
                       <div key={bIdx} className="bullet-row">
                         <span className="bullet-dot">•</span>

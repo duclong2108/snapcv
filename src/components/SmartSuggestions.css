@@ -1,0 +1,132 @@
+.btn-smart-suggest {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.15), rgba(59, 130, 246, 0.15));
+  border: 1px solid rgba(124, 58, 237, 0.3);
+  color: var(--violet-400);
+  padding: 6px 12px;
+  border-radius: var(--radius-md);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  margin-bottom: 12px;
+  margin-top: 4px;
+}
+
+.btn-smart-suggest:hover {
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.25), rgba(59, 130, 246, 0.25));
+  border-color: rgba(124, 58, 237, 0.5);
+}
+
+.smart-suggestions-panel {
+  background: var(--navy-900);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  margin: 12px 0;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.smart-suggestions-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  background: rgba(255,255,255,0.03);
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.smart-suggestions-header h4 {
+  font-size: var(--text-xs);
+  color: var(--violet-300);
+  font-weight: 600;
+  margin: 0;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: var(--navy-400);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 4px;
+}
+.close-btn:hover { color: var(--white); }
+
+.smart-suggestions-list {
+  max-height: 250px;
+  overflow-y: auto;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.smart-phrase-card {
+  padding: 10px 12px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  transition: all var(--transition-fast);
+}
+
+.smart-phrase-card p {
+  font-size: 13px;
+  color: var(--navy-200);
+  line-height: 1.5;
+  margin: 0;
+  flex: 1;
+}
+
+.smart-phrase-card:hover:not(.locked) {
+  background: rgba(124, 58, 237, 0.1);
+  border-color: rgba(124, 58, 237, 0.3);
+}
+
+.smart-phrase-card.locked {
+  opacity: 0.7;
+}
+
+.smart-phrase-card.locked p {
+  filter: blur(0.5px);
+}
+
+.smart-phrase-card.locked:hover {
+  background: rgba(255,255,255,0.05);
+  border-color: var(--navy-700);
+}
+
+.smart-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.smart-badge.add {
+  background: var(--violet-500);
+  color: white;
+  opacity: 0;
+  transform: translateX(-5px);
+  transition: all var(--transition-fast);
+}
+
+.smart-phrase-card:hover .smart-badge.add {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.smart-badge.pro {
+  background: rgba(245, 158, 11, 0.15);
+  color: var(--amber-400);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}

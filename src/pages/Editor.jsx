@@ -216,15 +216,15 @@ export default function Editor() {
   }
 
   const addCustomSection = () => {
-    const newName = prompt('Enter a name for the new section (e.g. Certifications):')
-    if (!newName || !newName.trim()) return
+    const customCount = (resume.customSections || []).length + 1
+    const newName = `Custom Section ${customCount}`
     
     const id = `custom_${Date.now()}`
     setResume(prev => ({
       ...prev,
       customSections: [
-        ...prev.customSections,
-        { id, name: newName.trim(), items: [] }
+        ...(prev.customSections || []),
+        { id, name: newName, items: [] }
       ]
     }))
     setActiveSection(id)

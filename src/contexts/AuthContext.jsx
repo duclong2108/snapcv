@@ -23,21 +23,49 @@ export const AuthProvider = ({ children }) => {
   const closeLoginModal = () => setIsLoginModalOpen(false);
 
   const mockLogin = (providerName) => {
-    console.warn(`Firebase is not configured! Simulating login with ${providerName}...`);
-    const mockUser = {
-      uid: `mock-uid-${Date.now()}`,
-      displayName: 'Test User',
-      email: `test.${providerName}@example.com`,
-      photoURL: `https://ui-avatars.com/api/?name=Test+User&background=random`
-    };
-    setUser(mockUser);
-    localStorage.setItem('snapcv_mock_user', JSON.stringify(mockUser));
-    return { user: mockUser };
+    return new Promise((resolve, reject) => {
+      const width = 500;
+      const height = 600;
+      const left = window.screen.width / 2 - width / 2;
+      const top = window.screen.height / 2 - height / 2;
+      
+      const popupUrl = `${window.location.origin}${window.location.pathname}#/mock-auth?provider=${providerName.toLowerCase()}`;
+      
+      const popup = window.open(
+        popupUrl,
+        'MockAuthPopup',
+        `width=${width},height=${height},top=${top},left=${left}`
+      );
+
+      const messageListener = (event) => {
+        if (event.origin !== window.location.origin) return;
+        
+        if (event.data && event.data.type === 'MOCK_AUTH_SUCCESS') {
+          const mockUser = event.data.user;
+          setUser(mockUser);
+          localStorage.setItem('snapcv_mock_user', JSON.stringify(mockUser));
+          
+          window.removeEventListener('message', messageListener);
+          resolve({ user: mockUser });
+        }
+      };
+
+      window.addEventListener('message', messageListener);
+
+      // Clean up listener if window closed without messaging
+      const checkClosed = setInterval(() => {
+        if (!popup || popup.closed) {
+          clearInterval(checkClosed);
+          window.removeEventListener('message', messageListener);
+          // Don't reject, just let them close it
+        }
+      }, 1000);
+    });
   };
 
   const loginWithGoogle = async () => {
     try {
-      if (isMockMode) return mockLogin('Google');
+      if (isMockMode) return await mockLogin('Google');
       return await signInWithPopup(auth, googleProvider);
     } catch (error) {
       console.error("Error signing in with Google:", error);
@@ -47,7 +75,7 @@ export const AuthProvider = ({ children }) => {
 
   const loginWithFacebook = async () => {
     try {
-      if (isMockMode) return mockLogin('Facebook');
+      if (isMockMode) return await mockLogin('Facebook');
       return await signInWithPopup(auth, facebookProvider);
     } catch (error) {
       console.error("Error signing in with Facebook:", error);

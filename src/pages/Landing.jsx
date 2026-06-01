@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import Footer from '../components/Footer.jsx'
 import { templates } from '../data/templates.js'
+import { PAYMENT_CONFIG } from '../utils/monetization.js'
 import './Landing.css'
 
 const features = [
@@ -344,7 +345,7 @@ export default function Landing() {
                 <li>✓ Public portfolio page</li>
                 <li>✓ Priority support</li>
               </ul>
-              <Link to="/editor" className="btn btn-primary btn-lg pricing-card__btn">Start Pro Trial</Link>
+              <a href={PAYMENT_CONFIG.checkoutUrls.proMonthly} target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-lg pricing-card__btn">Start Pro Trial</a>
             </div>
 
             {/* Lifetime */}
@@ -367,7 +368,7 @@ export default function Landing() {
                 <li>✓ Resume analytics</li>
                 <li>✓ Premium support</li>
               </ul>
-              <Link to="/editor" className="btn btn-secondary btn-lg pricing-card__btn">Get Lifetime Access</Link>
+              <a href={PAYMENT_CONFIG.checkoutUrls.lifetime} target="_blank" rel="noopener noreferrer" className="btn btn-secondary btn-lg pricing-card__btn">Get Lifetime Access</a>
             </div>
           </div>
         </div>

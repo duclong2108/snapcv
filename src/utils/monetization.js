@@ -13,8 +13,8 @@ export const PAYMENT_CONFIG = {
   //    - "SnapCV Lifetime" - $49 one-time
   // 3. For each product → Share → Copy checkout URL
   checkoutUrls: {
-    proMonthly: 'https://snapcv.lemonsqueezy.com/buy/pro-monthly',
-    lifetime: 'https://snapcv.lemonsqueezy.com/buy/lifetime',
+    proMonthly: 'https://snapcv.lemonsqueezy.com/checkout/buy/20dc93e8-9d29-4359-9843-fe78ef2d13ab',
+    lifetime: 'https://snapcv.lemonsqueezy.com/checkout/buy/d28380c9-28b8-467f-93f9-0bd262b7db2d',
   },
 
   // Buy Me a Coffee username (optional, for tips)

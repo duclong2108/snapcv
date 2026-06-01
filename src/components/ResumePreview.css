@@ -1,0 +1,511 @@
+/* ========================================
+   Resume Preview Styles
+   ======================================== */
+
+.resume {
+  width: 794px;
+  min-height: 1123px;
+  background: #FFFFFF;
+  color: #1E293B;
+  font-family: var(--resume-font-body, 'Inter', sans-serif);
+  font-size: 10.5pt;
+  line-height: 1.5;
+  position: relative;
+}
+
+/* ========================================
+   MINIMAL TEMPLATE
+   ======================================== */
+.resume-minimal {
+  padding: 48px 52px;
+}
+
+.rm-header {
+  text-align: center;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid var(--resume-primary, #0F172A);
+}
+
+.rm-name {
+  font-family: var(--resume-font-heading, 'Inter', sans-serif);
+  font-size: 26pt;
+  font-weight: 800;
+  color: var(--resume-primary, #0F172A);
+  letter-spacing: -0.02em;
+  margin-bottom: 4px;
+  line-height: 1.2;
+}
+
+.rm-title {
+  font-size: 12pt;
+  color: #64748B;
+  font-weight: 400;
+  margin-bottom: 10px;
+  letter-spacing: 0.02em;
+}
+
+.rm-contact {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  font-size: 9pt;
+  color: #475569;
+}
+
+.rm-section {
+  margin-bottom: 20px;
+}
+
+.rm-section-title {
+  font-family: var(--resume-font-heading, 'Inter', sans-serif);
+  font-size: 11pt;
+  font-weight: 700;
+  color: var(--resume-primary, #0F172A);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-bottom: 1px solid #E2E8F0;
+  padding-bottom: 4px;
+  margin-bottom: 12px;
+}
+
+.rm-entry {
+  margin-bottom: 14px;
+}
+
+.rm-entry-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 4px;
+}
+
+.rm-entry-title {
+  font-size: 11pt;
+  font-weight: 700;
+  color: #1E293B;
+}
+
+.rm-entry-subtitle {
+  font-size: 10pt;
+  color: #64748B;
+  font-weight: 400;
+}
+
+.rm-entry-date {
+  font-size: 9pt;
+  color: #94A3B8;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-left: 16px;
+}
+
+.rm-bullets {
+  padding-left: 18px;
+  margin-top: 6px;
+}
+
+.rm-bullets li {
+  font-size: 10pt;
+  color: #334155;
+  margin-bottom: 3px;
+  list-style-type: disc;
+  line-height: 1.5;
+}
+
+.rm-text {
+  font-size: 10pt;
+  color: #334155;
+  line-height: 1.6;
+}
+
+.rm-skills {
+  font-size: 10pt;
+  color: #334155;
+  line-height: 1.8;
+}
+
+.rm-link {
+  font-size: 9pt;
+  color: var(--resume-primary, #0F172A);
+  opacity: 0.6;
+}
+
+/* Variant: Executive */
+.resume-variant--executive {
+  font-family: 'Source Serif 4', Georgia, serif;
+  background: #FFFBEB;
+}
+
+.resume-variant--executive .rm-header {
+  border-bottom-color: #92400E;
+}
+
+.resume-variant--executive .rm-name {
+  font-family: 'Source Serif 4', Georgia, serif;
+  color: #1E293B;
+  font-weight: 700;
+}
+
+.resume-variant--executive .rm-section-title {
+  font-family: 'Source Serif 4', Georgia, serif;
+  color: #92400E;
+  border-bottom-color: #D4A76A;
+}
+
+/* Variant: Creative */
+.resume-variant--creative .rm-header {
+  background: linear-gradient(135deg, #DB2777, #7C3AED);
+  margin: -48px -52px 24px;
+  padding: 48px 52px 24px;
+  border-bottom: none;
+  text-align: left;
+}
+
+.resume-variant--creative .rm-name {
+  color: #FFFFFF;
+}
+
+.resume-variant--creative .rm-title {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.resume-variant--creative .rm-contact {
+  justify-content: flex-start;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.resume-variant--creative .rm-section-title {
+  color: #DB2777;
+  border-bottom-color: #FBCFE8;
+}
+
+/* Variant: Elegant */
+.resume-variant--elegant .rm-header {
+  border-bottom: 1px solid #D1D5DB;
+}
+
+.resume-variant--elegant .rm-name {
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-size: 22pt;
+  color: #374151;
+}
+
+.resume-variant--elegant .rm-section-title {
+  color: #6366F1;
+  border-bottom-color: #C7D2FE;
+  letter-spacing: 0.12em;
+  font-size: 10pt;
+}
+
+/* ========================================
+   MODERN TEMPLATE
+   ======================================== */
+.resume-modern {
+  padding: 0;
+}
+
+.rmod-header {
+  background: linear-gradient(135deg, var(--resume-primary, #7C3AED), var(--resume-accent, #3B82F6));
+  padding: 40px 48px 28px;
+  color: white;
+}
+
+.rmod-header-content {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 16px;
+}
+
+.rmod-initials {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20pt;
+  font-weight: 800;
+  color: white;
+  flex-shrink: 0;
+}
+
+.rmod-name {
+  font-family: var(--resume-font-heading, 'Inter', sans-serif);
+  font-size: 24pt;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.rmod-title {
+  font-size: 12pt;
+  opacity: 0.85;
+  font-weight: 400;
+}
+
+.rmod-contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  font-size: 9pt;
+  opacity: 0.8;
+}
+
+.rmod-section {
+  padding: 0 48px;
+  margin-bottom: 18px;
+}
+
+.rmod-section:first-of-type {
+  margin-top: 28px;
+}
+
+.rmod-section-title {
+  font-family: var(--resume-font-heading, 'Inter', sans-serif);
+  font-size: 12pt;
+  font-weight: 700;
+  color: var(--resume-primary, #7C3AED);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rmod-icon {
+  font-size: 14pt;
+}
+
+.rmod-entry {
+  margin-bottom: 14px;
+  padding-left: 12px;
+  border-left: 3px solid #E2E8F0;
+}
+
+.rmod-entry-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 4px;
+}
+
+.rmod-entry-title {
+  font-size: 11pt;
+  font-weight: 700;
+  color: #1E293B;
+}
+
+.rmod-entry-company {
+  font-size: 10pt;
+  color: #64748B;
+}
+
+.rmod-date {
+  font-size: 9pt;
+  color: #94A3B8;
+  white-space: nowrap;
+  flex-shrink: 0;
+  padding: 2px 8px;
+  background: #F1F5F9;
+  border-radius: 4px;
+}
+
+.rmod-bullets {
+  padding-left: 16px;
+  margin-top: 6px;
+}
+
+.rmod-bullets li {
+  font-size: 10pt;
+  color: #334155;
+  margin-bottom: 3px;
+  list-style-type: disc;
+  line-height: 1.5;
+}
+
+.rmod-text {
+  font-size: 10pt;
+  color: #334155;
+  line-height: 1.6;
+}
+
+.rmod-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.rmod-skill-chip {
+  padding: 3px 12px;
+  background: rgba(124, 58, 237, 0.08);
+  border: 1px solid rgba(124, 58, 237, 0.15);
+  border-radius: 20px;
+  font-size: 9pt;
+  color: var(--resume-primary, #7C3AED);
+  font-weight: 500;
+}
+
+.rmod-link {
+  font-size: 9pt;
+  color: var(--resume-primary, #7C3AED);
+  opacity: 0.7;
+}
+
+/* ========================================
+   DEVELOPER TEMPLATE
+   ======================================== */
+.resume-developer {
+  background: #0F172A;
+  color: #E2E8F0;
+  padding: 40px 48px;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+}
+
+.rdev-header {
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #1E293B;
+}
+
+.rdev-prompt {
+  font-size: 9pt;
+  margin-bottom: 12px;
+  opacity: 0.6;
+}
+
+.rdev-prompt-user { color: #10B981; }
+.rdev-prompt-sep { color: #64748B; }
+.rdev-prompt-path { color: #3B82F6; }
+.rdev-prompt-dollar { color: #64748B; margin-left: 2px; }
+.rdev-prompt-cmd { color: #E2E8F0; }
+
+.rdev-name {
+  font-size: 26pt;
+  font-weight: 800;
+  color: #F8FAFC;
+  letter-spacing: -0.02em;
+  margin-bottom: 4px;
+  line-height: 1.2;
+  font-family: var(--resume-font-heading, 'Inter', sans-serif);
+}
+
+.rdev-title {
+  font-size: 12pt;
+  color: #10B981;
+  font-weight: 400;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+.rdev-contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.rdev-tag {
+  padding: 3px 10px;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: 4px;
+  font-size: 8.5pt;
+  color: #94A3B8;
+}
+
+.rdev-section {
+  margin-bottom: 20px;
+}
+
+.rdev-section-title {
+  font-size: 11pt;
+  font-weight: 700;
+  color: #10B981;
+  margin-bottom: 12px;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+.rdev-entry {
+  margin-bottom: 14px;
+  padding-left: 12px;
+  border-left: 2px solid #1E293B;
+}
+
+.rdev-entry-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 4px;
+}
+
+.rdev-entry-title {
+  font-size: 11pt;
+  font-weight: 700;
+  color: #F8FAFC;
+  font-family: var(--resume-font-heading, 'Inter', sans-serif);
+}
+
+.rdev-at {
+  color: #10B981;
+  font-weight: 400;
+}
+
+.rdev-date {
+  font-size: 9pt;
+  color: #64748B;
+  white-space: nowrap;
+  flex-shrink: 0;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+.rdev-bullets {
+  padding-left: 4px;
+  margin-top: 6px;
+}
+
+.rdev-bullets li {
+  font-size: 10pt;
+  color: #CBD5E1;
+  margin-bottom: 3px;
+  list-style: none;
+  line-height: 1.5;
+  display: flex;
+  gap: 8px;
+}
+
+.rdev-bullet-arrow {
+  color: #10B981;
+  flex-shrink: 0;
+}
+
+.rdev-text {
+  font-size: 10pt;
+  color: #94A3B8;
+  line-height: 1.6;
+}
+
+.rdev-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.rdev-skill {
+  padding: 3px 10px;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: 4px;
+  font-size: 9pt;
+  color: #10B981;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+.rdev-link-text {
+  font-size: 9pt;
+  color: #3B82F6;
+  margin-top: 4px;
+}

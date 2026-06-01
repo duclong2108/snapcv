@@ -1,10 +1,14 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import './MockAuth.css';
 
 export default function MockAuth() {
   const [searchParams] = useSearchParams();
   const provider = searchParams.get('provider') || 'google';
+
+  const [showCustomForm, setShowCustomForm] = useState(false);
+  const [customName, setCustomName] = useState('');
+  const [customEmail, setCustomEmail] = useState('');
 
   const handleSelectAccount = (email, name, avatar) => {
     const userData = {
@@ -18,6 +22,12 @@ export default function MockAuth() {
       window.opener.postMessage({ type: 'MOCK_AUTH_SUCCESS', user: userData }, window.location.origin);
       window.close();
     }
+  };
+
+  const handleSubmitCustom = (e) => {
+    e.preventDefault();
+    if (!customName || !customEmail) return;
+    handleSelectAccount(customEmail, customName);
   };
 
   useEffect(() => {
@@ -34,23 +44,59 @@ export default function MockAuth() {
           <h1>facebook</h1>
         </div>
         <div className="fb-auth-card">
-          <div className="fb-auth-card__header">
-            <h3>Log in to Facebook</h3>
-            <p>To connect with SnapCV</p>
-          </div>
-          <div className="fb-auth-card__profile">
-            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=80&h=80" alt="John Doe" />
-            <div className="fb-profile-info">
-              <strong>John Doe</strong>
-              <span>john.doe@gmail.com</span>
-            </div>
-          </div>
-          <button className="fb-login-btn" onClick={() => handleSelectAccount('john.doe@gmail.com', 'John Doe', 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=80&h=80')}>
-            Continue as John
-          </button>
-          <button className="fb-cancel-btn" onClick={() => window.close()}>
-            Cancel
-          </button>
+          {!showCustomForm ? (
+            <>
+              <div className="fb-auth-card__header">
+                <h3>Log in to Facebook</h3>
+                <p>To connect with SnapCV</p>
+              </div>
+              <div className="fb-auth-card__profile">
+                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=80&h=80" alt="John Doe" />
+                <div className="fb-profile-info">
+                  <strong>John Doe</strong>
+                  <span>john.doe@gmail.com</span>
+                </div>
+              </div>
+              <button className="fb-login-btn" onClick={() => handleSelectAccount('john.doe@gmail.com', 'John Doe', 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=80&h=80')}>
+                Continue as John
+              </button>
+              <button className="fb-cancel-btn" style={{ marginBottom: '8px' }} onClick={() => setShowCustomForm(true)}>
+                Log in as another user
+              </button>
+              <button className="fb-cancel-btn" onClick={() => window.close()}>
+                Cancel
+              </button>
+            </>
+          ) : (
+            <form onSubmit={handleSubmitCustom} className="fb-custom-form">
+              <div className="fb-auth-card__header">
+                <h3>Log in to Facebook</h3>
+                <p>Enter your details to test with your real account info</p>
+              </div>
+              <div className="fb-input-group">
+                <input 
+                  type="text" 
+                  placeholder="Full Name" 
+                  value={customName}
+                  onChange={e => setCustomName(e.target.value)}
+                  required 
+                />
+                <input 
+                  type="email" 
+                  placeholder="Email address" 
+                  value={customEmail}
+                  onChange={e => setCustomEmail(e.target.value)}
+                  required 
+                />
+              </div>
+              <button type="submit" className="fb-login-btn">
+                Log In
+              </button>
+              <button type="button" className="fb-cancel-btn" onClick={() => setShowCustomForm(false)}>
+                Back
+              </button>
+            </form>
+          )}
         </div>
       </div>
     );
@@ -71,30 +117,59 @@ export default function MockAuth() {
         <h2>Sign in with Google</h2>
         <p className="google-subtitle">to continue to SnapCV</p>
 
-        <div className="google-account-list">
-          <div className="google-account-item" onClick={() => handleSelectAccount('john.doe@gmail.com', 'John Doe', 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=80&h=80')}>
-            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=80&h=80" alt="John Doe" />
-            <div className="google-account-info">
-              <strong>John Doe</strong>
-              <span>john.doe@gmail.com</span>
+        {!showCustomForm ? (
+          <div className="google-account-list">
+            <div className="google-account-item" onClick={() => handleSelectAccount('john.doe@gmail.com', 'John Doe', 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=80&h=80')}>
+              <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=80&h=80" alt="John Doe" />
+              <div className="google-account-info">
+                <strong>John Doe</strong>
+                <span>john.doe@gmail.com</span>
+              </div>
             </div>
-          </div>
 
-          <div className="google-account-item" onClick={() => handleSelectAccount('jane.smith@gmail.com', 'Jane Smith', 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=80&h=80')}>
-            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=80&h=80" alt="Jane Smith" />
-            <div className="google-account-info">
-              <strong>Jane Smith</strong>
-              <span>jane.smith@gmail.com</span>
+            <div className="google-account-item" onClick={() => handleSelectAccount('jane.smith@gmail.com', 'Jane Smith', 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=80&h=80')}>
+              <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=80&h=80" alt="Jane Smith" />
+              <div className="google-account-info">
+                <strong>Jane Smith</strong>
+                <span>jane.smith@gmail.com</span>
+              </div>
             </div>
-          </div>
 
-          <div className="google-account-item google-use-another" onClick={() => handleSelectAccount('another.user@gmail.com', 'Custom Demo User')}>
-            <div className="google-another-icon">👤</div>
-            <div className="google-account-info">
-              <strong>Use another account</strong>
+            <div className="google-account-item google-use-another" onClick={() => setShowCustomForm(true)}>
+              <div className="google-another-icon">👤</div>
+              <div className="google-account-info">
+                <strong>Use another account</strong>
+              </div>
             </div>
           </div>
-        </div>
+        ) : (
+          <form onSubmit={handleSubmitCustom} className="google-custom-form">
+            <div className="google-input-group">
+              <input 
+                type="text" 
+                placeholder="Your Full Name" 
+                value={customName}
+                onChange={e => setCustomName(e.target.value)}
+                required 
+              />
+              <input 
+                type="email" 
+                placeholder="Email address" 
+                value={customEmail}
+                onChange={e => setCustomEmail(e.target.value)}
+                required 
+              />
+            </div>
+            <div className="google-form-actions">
+              <button type="button" className="google-back-btn" onClick={() => setShowCustomForm(false)}>
+                Back
+              </button>
+              <button type="submit" className="google-submit-btn">
+                Next
+              </button>
+            </div>
+          </form>
+        )}
       </div>
     </div>
   );

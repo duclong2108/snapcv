@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet-async'
 import { defaultResumeData } from '../data/defaultResume.js'
 import { templates, colorThemes, fontPairings } from '../data/templates.js'
 import { saveResume, loadResume, saveSettings, loadSettings, exportResumeJSON, importResumeJSON } from '../utils/storage.js'
+import { saveResumeToCloud, loadResumeFromCloud, saveSettingsToCloud, loadSettingsFromCloud } from '../utils/cloudStorage.js'
 import { isPro, PAYMENT_CONFIG } from '../utils/monetization.js'
 import ResumePreview from '../components/ResumePreview.jsx'
 import TemplateThumbnail from '../components/TemplateThumbnail.jsx'
@@ -31,7 +32,7 @@ export default function Editor() {
   const [previewScale, setPreviewScale] = useState(1)
 
   const { user, openLoginModal } = useAuth()
-  const [syncStatus, setSyncStatus] = useState('Saved to Cloud')
+  const [cloudLoaded, setCloudLoaded] = useState(false)
 
   const [resume, setResume] = useState(() => {
     const saved = loadResume()
@@ -60,16 +61,41 @@ export default function Editor() {
   const [proFeature, setProFeature] = useState('')
   const userIsPro = isPro()
 
-  // Auto-save
+  // Auto-save (local + cloud)
   useEffect(() => {
     const timer = setTimeout(() => {
       saveResume(resume)
       saveSettings(settings)
       setSaved(true)
       setTimeout(() => setSaved(false), 2000)
-    }, 1000)
+
+      // Cloud sync when logged in
+      if (user) {
+        saveResumeToCloud(user.uid, resume)
+        saveSettingsToCloud(user.uid, settings)
+      }
+    }, 1500)
     return () => clearTimeout(timer)
-  }, [resume, settings])
+  }, [resume, settings, user])
+
+  // Load from cloud when user logs in
+  useEffect(() => {
+    if (user && !cloudLoaded) {
+      const loadCloud = async () => {
+        const cloudResume = await loadResumeFromCloud(user.uid)
+        const cloudSettings = await loadSettingsFromCloud(user.uid)
+        if (cloudResume) {
+          if (!cloudResume.customSections) cloudResume.customSections = []
+          setResume(cloudResume)
+        }
+        if (cloudSettings) {
+          setSettings(cloudSettings)
+        }
+        setCloudLoaded(true)
+      }
+      loadCloud()
+    }
+  }, [user, cloudLoaded])
 
   // Dynamic preview scaling
   useEffect(() => {
@@ -526,21 +552,12 @@ export default function Editor() {
           </div>
         </div>
 
-        {user ? (
-          <div className="data-protection-banner" style={{ background: 'rgba(16, 185, 129, 0.1)', borderColor: 'rgba(16, 185, 129, 0.2)' }}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--emerald-400)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
-            <div className="dp-text">
-              <strong style={{ color: 'var(--emerald-400)' }}>{syncStatus}</strong>
-              <span>Your resume is securely backed up to your account.</span>
-            </div>
-            <button className="dp-btn" onClick={() => exportResumeJSON(resume)}>Export JSON</button>
-          </div>
-        ) : (
+        {!user && (
           <div className="data-protection-banner">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
             <div className="dp-text">
               <strong>Don't lose your work!</strong>
-              <span>Sign in to save your resume to the cloud.</span>
+              <span>Sign in to auto-save your resume to the cloud.</span>
             </div>
             <button className="btn btn-primary btn-sm" onClick={openLoginModal}>Sign In</button>
           </div>

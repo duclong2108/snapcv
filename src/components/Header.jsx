@@ -7,7 +7,7 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const location = useLocation()
-  const { user, loginWithGoogle, logout } = useAuth()
+  const { user, openLoginModal, logout } = useAuth()
 
   const isEditor = location.pathname.startsWith('/editor')
 
@@ -51,7 +51,7 @@ export default function Header() {
               <button onClick={logout} className="header__link" style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>Logout</button>
             </div>
           ) : (
-            <button onClick={loginWithGoogle} className="header__link" style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>Sign In</button>
+            <button onClick={openLoginModal} className="header__link" style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>Sign In</button>
           )}
 
           <Link to="/editor" className="btn btn-primary btn-sm header__cta">

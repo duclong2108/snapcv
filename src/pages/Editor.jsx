@@ -30,7 +30,7 @@ export default function Editor() {
   const fileInputRef = useRef(null)
   const [previewScale, setPreviewScale] = useState(1)
 
-  const { user, loginWithGoogle } = useAuth()
+  const { user, openLoginModal } = useAuth()
   const [syncStatus, setSyncStatus] = useState('Saved to Cloud')
 
   const [resume, setResume] = useState(() => {
@@ -542,7 +542,7 @@ export default function Editor() {
               <strong>Don't lose your work!</strong>
               <span>Sign in to save your resume to the cloud.</span>
             </div>
-            <button className="btn btn-primary btn-sm" onClick={loginWithGoogle}>Sign In</button>
+            <button className="btn btn-primary btn-sm" onClick={openLoginModal}>Sign In</button>
           </div>
         )}
 

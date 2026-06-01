@@ -30,7 +30,9 @@ export default function Editor() {
 
   const [resume, setResume] = useState(() => {
     const saved = loadResume()
-    return saved || { ...defaultResumeData }
+    const initial = saved || { ...defaultResumeData }
+    if (!initial.customSections) initial.customSections = []
+    return initial
   })
 
   const [settings, setSettings] = useState(() => {
@@ -144,6 +146,75 @@ export default function Editor() {
           return {
             ...s,
             items: s.items.map(i => i.id === itemId ? { ...i, [field]: value } : i)
+          }
+        }
+        return s
+      })
+    }))
+  }
+
+  const addCustomSection = () => {
+    const newName = prompt('Enter a name for the new section (e.g. Certifications):')
+    if (!newName || !newName.trim()) return
+    
+    const id = `custom_${Date.now()}`
+    setResume(prev => ({
+      ...prev,
+      customSections: [
+        ...prev.customSections,
+        { id, name: newName.trim(), items: [] }
+      ]
+    }))
+    setActiveSection(id)
+  }
+
+  const updateCustomSectionName = (id, newName) => {
+    setResume(prev => ({
+      ...prev,
+      customSections: prev.customSections.map(s => 
+        s.id === id ? { ...s, name: newName } : s
+      )
+    }))
+  }
+
+  const removeCustomSection = (id) => {
+    if (!confirm('Are you sure you want to delete this entire section?')) return
+    setResume(prev => ({
+      ...prev,
+      customSections: prev.customSections.filter(s => s.id !== id)
+    }))
+    setActiveSection('personal')
+  }
+
+  const addCustomItem = (sectionId) => {
+    setResume(prev => ({
+      ...prev,
+      customSections: prev.customSections.map(s => {
+        if (s.id === sectionId) {
+          return {
+            ...s,
+            items: [...s.items, {
+              id: Date.now().toString(),
+              title: '',
+              subtitle: '',
+              date: '',
+              description: ''
+            }]
+          }
+        }
+        return s
+      })
+    }))
+  }
+
+  const removeCustomItem = (sectionId, itemId) => {
+    setResume(prev => ({
+      ...prev,
+      customSections: prev.customSections.map(s => {
+        if (s.id === sectionId) {
+          return {
+            ...s,
+            items: s.items.filter(i => i.id !== itemId)
           }
         }
         return s
